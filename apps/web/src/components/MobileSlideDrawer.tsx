@@ -1,22 +1,20 @@
-import { useEffect } from "react";
-import { DayDetail } from "@bong/panjika-core";
-import DayDetailPanel from "./DayDetailPanel";
+import { useEffect, ReactNode } from "react";
 
-interface MobileDetailDrawerProps {
+interface MobileSlideDrawerProps {
   open: boolean;
   onClose: () => void;
-  detail: DayDetail;
-  mode: "bn" | "en";
+  closeLabel: string;
+  children: ReactNode;
 }
 
 /**
- * Full-height panel that slides in from the right on phone-width screens
- * (hidden entirely at lg+, where the detail panel is a sticky sidebar
- * instead). Keeping the detail view out of the normal mobile document flow
- * leaves the calendar grid free to grow taller, which is what actually
- * makes the festival artwork in each cell readable.
+ * Generic full-height panel that slides in from the right on phone-width
+ * screens (hidden entirely at lg+, where content lives inline/sidebar
+ * instead). Used both for the single-day detail view and the month agenda
+ * list, so the calendar grid itself is the only thing on the mobile main
+ * screen.
  */
-export default function MobileDetailDrawer({ open, onClose, detail, mode }: MobileDetailDrawerProps) {
+export default function MobileSlideDrawer({ open, onClose, closeLabel, children }: MobileSlideDrawerProps) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -45,9 +43,9 @@ export default function MobileDetailDrawer({ open, onClose, detail, mode }: Mobi
             className="self-start flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 text-sm font-semibold"
           >
             <span aria-hidden>←</span>
-            <span className="bn">বন্ধ করুন</span>
+            <span className="bn">{closeLabel}</span>
           </button>
-          <DayDetailPanel detail={detail} mode={mode} />
+          {children}
         </div>
       </div>
     </div>

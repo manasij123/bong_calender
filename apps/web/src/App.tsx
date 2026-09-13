@@ -18,7 +18,7 @@ import MonthNav from "./components/MonthNav";
 import CalendarGrid from "./components/CalendarGrid";
 import DayDetailPanel from "./components/DayDetailPanel";
 import EventAgenda from "./components/EventAgenda";
-import MobileDetailDrawer from "./components/MobileDetailDrawer";
+import MobileSlideDrawer from "./components/MobileSlideDrawer";
 
 type Mode = "bn" | "en";
 type Theme = "dark" | "light";
@@ -53,6 +53,7 @@ export default function App() {
   const [gregorianMonth, setGregorianMonth] = useState(t.month);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(t);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [mobileAgendaOpen, setMobileAgendaOpen] = useState(false);
 
   const cells = useMemo<DayCell[]>(() => {
     return mode === "bn"
@@ -124,6 +125,12 @@ export default function App() {
     setMobileDrawerOpen(true);
   }
 
+  function handleSelectFromAgenda(cell: DayCell) {
+    setSelectedDate(cell.date);
+    setMobileAgendaOpen(false);
+    setMobileDrawerOpen(true);
+  }
+
   const title =
     mode === "bn"
       ? `${BENGALI_MONTH_NAMES[bengaliMonthIndex]} ${toBengaliNumber(bengaliYear)}`
@@ -162,7 +169,18 @@ export default function App() {
             todayKey={todayKey}
             onSelect={handleSelect}
           />
-          <EventAgenda mode={mode} cells={cells} selectedKey={dateKey(selectedDate)} todayKey={todayKey} onSelect={handleSelect} />
+          <button
+            onClick={() => setMobileAgendaOpen(true)}
+            className="lg:hidden flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 px-4 py-3 shadow-glow text-left"
+          >
+            <span className="bn font-semibold">📋 মাসের তালিকা দেখুন</span>
+            <span aria-hidden className="text-[color:var(--text-muted)]">
+              →
+            </span>
+          </button>
+          <div className="hidden lg:block">
+            <EventAgenda mode={mode} cells={cells} selectedKey={dateKey(selectedDate)} todayKey={todayKey} onSelect={handleSelect} />
+          </div>
         </div>
 
         <div className="hidden lg:block sticky top-20">
@@ -170,12 +188,13 @@ export default function App() {
         </div>
       </main>
 
-      <MobileDetailDrawer
-        open={mobileDrawerOpen}
-        onClose={() => setMobileDrawerOpen(false)}
-        detail={selectedDetail}
-        mode={mode}
-      />
+      <MobileSlideDrawer open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} closeLabel="বন্ধ করুন">
+        <DayDetailPanel detail={selectedDetail} mode={mode} />
+      </MobileSlideDrawer>
+
+      <MobileSlideDrawer open={mobileAgendaOpen} onClose={() => setMobileAgendaOpen(false)} closeLabel="বন্ধ করুন">
+        <EventAgenda mode={mode} cells={cells} selectedKey={dateKey(selectedDate)} todayKey={todayKey} onSelect={handleSelectFromAgenda} />
+      </MobileSlideDrawer>
 
       <footer className="mx-auto max-w-6xl px-5 pt-6 text-center text-[11px] text-[color:var(--text-muted)] bn">
         তৈরি হয়েছে ভালোবাসা দিয়ে — বাংলা পঞ্জিকা ওয়েব ও ডেস্কটপ অ্যাপ
