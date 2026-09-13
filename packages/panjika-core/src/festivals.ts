@@ -67,6 +67,10 @@ export interface Festival {
 export const BENGALI_FESTIVALS: Festival[] = [
   { id: "poila-boishakh", nameBn: "পয়লা বৈশাখ (নববর্ষ)", nameEn: "Bengali New Year", category: "bengali-new-year", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 1 }, emoji: "🎊", icon: "sun" },
   { id: "rabindra-jayanti", nameBn: "রবীন্দ্র জয়ন্তী (২৫ বৈশাখ)", nameEn: "Rabindra Jayanti (Tagore's Birthday)", category: "other", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 25 }, emoji: "📖", icon: "book" },
+  // Rabindranath died on 22 Shraban 1348 (7 August 1941) -- his death
+  // anniversary "Baishe Shraban" is, like his birthday, fixed to the
+  // Bengali date rather than the Gregorian one.
+  { id: "rabindra-tirodhan", nameBn: "রবীন্দ্র তিরোধান দিবস (বাইশে শ্রাবণ)", nameEn: "Tagore's Death Anniversary (Baishe Shraban)", category: "other", rule: { kind: "bengaliMonthDay", monthIndex: 3, day: 22 }, emoji: "📖", icon: "book" },
   { id: "ramakrishna-jayanti", nameBn: "শ্রীরামকৃষ্ণের জন্মতিথি", nameEn: "Ramakrishna Jayanti", category: "other", rule: { kind: "tithi", monthIndex: 10, paksha: "shukla", tithiIndex: 2 }, emoji: "🪔", icon: "diya" },
   { id: "rath-yatra", nameBn: "রথযাত্রা", nameEn: "Rath Yatra", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 2 }, emoji: "🛺", icon: "chariot" },
   { id: "ulto-rath", nameBn: "উল্টো রথ", nameEn: "Ulto Rath", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 10 }, emoji: "🛺", icon: "chariot" },
@@ -115,7 +119,10 @@ export const GREGORIAN_HOLIDAYS: {
   { id: "republic-day", nameBn: "প্রজাতন্ত্র দিবস", nameEn: "Republic Day (India)", month: 1, day: 26, emoji: "🇮🇳", icon: "flag" },
   { id: "valentines-day", nameBn: "ভ্যালেন্টাইনস ডে", nameEn: "Valentine's Day", month: 2, day: 14, emoji: "❤️", icon: "heart" },
   { id: "may-day", nameBn: "মে দিবস", nameEn: "International Workers' Day", month: 5, day: 1, emoji: "🛠️", icon: "gear" },
+  { id: "vivekananda-tirodhan", nameBn: "স্বামী বিবেকানন্দের তিরোধান দিবস (মহাসমাধি)", nameEn: "Swami Vivekananda's Death Anniversary (Mahasamadhi)", month: 7, day: 4, emoji: "🧘", icon: "diya" },
+  { id: "sarada-devi-tirodhan", nameBn: "সারদা দেবীর তিরোধান দিবস", nameEn: "Sarada Devi's Death Anniversary", month: 7, day: 21, emoji: "🪔", icon: "diya" },
   { id: "independence-day", nameBn: "স্বাধীনতা দিবস", nameEn: "Independence Day (India)", month: 8, day: 15, emoji: "🇮🇳", icon: "flag" },
+  { id: "ramakrishna-tirodhan", nameBn: "শ্রীরামকৃষ্ণের তিরোধান দিবস", nameEn: "Ramakrishna's Death Anniversary", month: 8, day: 16, emoji: "🪔", icon: "diya" },
   { id: "teachers-day", nameBn: "শিক্ষক দিবস", nameEn: "Teachers' Day", month: 9, day: 5, emoji: "🍎", icon: "book" },
   { id: "gandhi-jayanti", nameBn: "গান্ধী জয়ন্তী", nameEn: "Gandhi Jayanti", month: 10, day: 2, emoji: "🕊️", icon: "dove" },
   { id: "childrens-day", nameBn: "শিশু দিবস", nameEn: "Children's Day", month: 11, day: 14, emoji: "🎈", icon: "balloon" },

@@ -40,7 +40,7 @@ export default function MobileSlideDrawer({ open, onClose, closeLabel, children 
         <div className="p-3 flex flex-col gap-3">
           <button
             onClick={onClose}
-            className="self-start flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-3 py-1.5 text-sm font-semibold"
+            className="self-start flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-3 text-sm font-semibold"
           >
             <span aria-hidden>←</span>
             <span className="bn">{closeLabel}</span>

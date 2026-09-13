@@ -14,7 +14,7 @@ export default function Header({ mode, onModeChange, theme, onThemeToggle, onOpe
           <img src="/logo-192.png" alt="বাংলা পঞ্জিকা" className="h-9 w-9 shrink-0 rounded-xl shadow-glow" />
           <div className="min-w-0">
             <h1 className="text-base sm:text-lg font-bold bn leading-tight truncate">বাংলা পঞ্জিকা</h1>
-            <p className="text-[11px] text-[color:var(--text-muted)] leading-tight truncate">
+            <p className="hidden sm:block text-[11px] text-[color:var(--text-muted)] leading-tight truncate">
               Bengali Panjika · কলকাতা
             </p>
           </div>
@@ -42,14 +42,14 @@ export default function Header({ mode, onModeChange, theme, onThemeToggle, onOpe
           <button
             onClick={onOpenSearch}
             aria-label="Search"
-            className="h-9 w-9 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
+            className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
             🔍
           </button>
           <button
             onClick={onThemeToggle}
             aria-label="Toggle theme"
-            className="h-9 w-9 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
+            className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
