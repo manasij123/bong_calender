@@ -6,11 +6,45 @@
 // rashi) happens before or after that day's sunset at the reference city
 // -- the same convention used by printed West Bengal panjikas.
 
-import { dateToJD } from "./julian.js";
-import { longitudesAt } from "./panchang.js";
+import { dateToJD, jdToJDE, jdeCentury, rad2deg } from "./julian.js";
+import { sunMeanLongitude, sunTrueLongitude, sunApparentLongitude } from "./sun.js";
+import { lahiriAyanamsaDeg } from "./ayanamsa.js";
 import { getSunTimes, GeoLocation, KOLKATA } from "./solarTime.js";
 import { pMod } from "./julian.js";
 import { BENGALI_MONTH_NAMES, BENGALI_WEEKDAY_NAMES } from "./numerals.js";
+
+// Printed West Bengal panjikas (Gupta Press / P.M. Bagchi style) run their
+// sankranti (month-turnover) dates about 1-2 days later than a precise
+// modern ephemeris -- verified against 2026 reference dates from multiple
+// published Bengali calendars: Poila Boishakh = 15 April 2026, Bhadra 1 =
+// 19 August 2026 (both a day or two after what plain Lahiri + modern solar
+// theory gives). This matches the well-documented Driksiddhanta vs.
+// Odriksiddhanta split in Bengali panjika-making: most popular panjikas
+// still follow classical Surya Siddhanta solar parameters rather than a
+// precise modern one. Rather than reimplementing the full classical
+// Siddhanta from its ancient epoch, we approximate the same practical
+// effect with two small, calibrated adjustments to the modern calculation:
+//  - a larger equation-of-center, matching Surya Siddhanta's classical
+//    solar apsis correction (2 deg 10' 32") vs the modern ~1 deg 55'.
+//  - a small additional ayanamsa offset.
+// This is used only for month/day-of-month placement -- tithi/nakshatra
+// elsewhere keep the precise modern calculation.
+const TRADITIONAL_EQUATION_SCALE = (2 + 10 / 60 + 32 / 3600) / 1.914602;
+const TRADITIONAL_AYANAMSA_OFFSET_DEG = 1.5;
+
+/** Sun's sidereal longitude, adjusted to match traditional West Bengal panjika sankranti dates. */
+function traditionalSiderealSunLongitudeDeg(jd: number): number {
+  const T = jdeCentury(jdToJDE(jd));
+  const meanDeg = pMod(rad2deg(sunMeanLongitude(T)), 360);
+  const trueDeg = pMod(rad2deg(sunTrueLongitude(T)), 360);
+  const apparentDeg = pMod(rad2deg(sunApparentLongitude(T)), 360);
+  let equationOfCenter = trueDeg - meanDeg;
+  if (equationOfCenter > 180) equationOfCenter -= 360;
+  if (equationOfCenter < -180) equationOfCenter += 360;
+  const adjustedApparentDeg = apparentDeg + (TRADITIONAL_EQUATION_SCALE - 1) * equationOfCenter;
+  const ayanamsa = lahiriAyanamsaDeg(jd) + TRADITIONAL_AYANAMSA_OFFSET_DEG;
+  return pMod(adjustedApparentDeg - ayanamsa, 360);
+}
 
 export interface CalendarDate {
   year: number;
@@ -33,11 +67,11 @@ export function compareDates(a: CalendarDate, b: CalendarDate): number {
   return dateKey(a) < dateKey(b) ? -1 : dateKey(a) > dateKey(b) ? 1 : 0;
 }
 
-/** Sun's sidereal (Lahiri) longitude at the given local calendar date's sunset. */
+/** Sun's (traditional-panjika-adjusted) sidereal longitude at the given local calendar date's sunset. */
 function siderealSunLongitudeAtSunset(date: CalendarDate, loc: GeoLocation): number {
   const times = getSunTimes(date.year, date.month, date.day, loc);
   const jd = dateToJD(times.sunsetLocal);
-  return longitudesAt(jd).sunSidereal;
+  return traditionalSiderealSunLongitudeDeg(jd);
 }
 
 /** Which Bengali solar-month "slot" (0=Boishakh..11=Chaitra) a date falls in. */
