@@ -18,6 +18,7 @@ import MonthNav from "./components/MonthNav";
 import CalendarGrid from "./components/CalendarGrid";
 import DayDetailPanel from "./components/DayDetailPanel";
 import EventAgenda from "./components/EventAgenda";
+import MobileDetailDrawer from "./components/MobileDetailDrawer";
 
 type Mode = "bn" | "en";
 type Theme = "dark" | "light";
@@ -51,6 +52,7 @@ export default function App() {
   const [gregorianYear, setGregorianYear] = useState(t.year);
   const [gregorianMonth, setGregorianMonth] = useState(t.month);
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(t);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const cells = useMemo<DayCell[]>(() => {
     return mode === "bn"
@@ -119,6 +121,7 @@ export default function App() {
 
   function handleSelect(cell: DayCell) {
     setSelectedDate(cell.date);
+    setMobileDrawerOpen(true);
   }
 
   const title =
@@ -159,9 +162,6 @@ export default function App() {
             todayKey={todayKey}
             onSelect={handleSelect}
           />
-          <div className="lg:hidden">
-            <DayDetailPanel detail={selectedDetail} mode={mode} />
-          </div>
           <EventAgenda mode={mode} cells={cells} selectedKey={dateKey(selectedDate)} todayKey={todayKey} onSelect={handleSelect} />
         </div>
 
@@ -169,6 +169,13 @@ export default function App() {
           <DayDetailPanel detail={selectedDetail} mode={mode} />
         </div>
       </main>
+
+      <MobileDetailDrawer
+        open={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        detail={selectedDetail}
+        mode={mode}
+      />
 
       <footer className="mx-auto max-w-6xl px-5 pt-6 text-center text-[11px] text-[color:var(--text-muted)] bn">
         তৈরি হয়েছে ভালোবাসা দিয়ে — বাংলা পঞ্জিকা ওয়েব ও ডেস্কটপ অ্যাপ

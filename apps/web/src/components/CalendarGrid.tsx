@@ -83,7 +83,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              className={`group relative aspect-[4/4.8] sm:aspect-[4/4.2] rounded-lg sm:rounded-xl border px-1 py-1 sm:px-1.5 sm:py-1.5 flex flex-col items-start text-left transition-all
+              className={`group relative aspect-[4/5.6] sm:aspect-[4/4.2] rounded-lg sm:rounded-xl border px-1 py-1 sm:px-1.5 sm:py-1.5 flex flex-col items-start text-left transition-all
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
