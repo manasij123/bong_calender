@@ -1,6 +1,7 @@
 import { DayCell, dateKey, toBengaliNumber } from "@bong/panjika-core";
 import FestivalIconGlyph, { IconKey } from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
+import MarqueeText from "./MarqueeText";
 import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgba } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
@@ -108,12 +109,11 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                       <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
                     </span>
                   )}
-                  <span
-                    className="text-[8px] sm:text-[10px] leading-tight text-center bn line-clamp-1 px-0.5 shrink-0"
-                    style={{ color: badge.color }}
-                  >
-                    {badge.label}
-                  </span>
+                  <MarqueeText
+                    text={badge.label}
+                    color={badge.color}
+                    className="w-full text-[8px] sm:text-[10px] leading-tight bn px-0.5 shrink-0"
+                  />
                 </div>
               ) : (
                 <div className="flex-1 min-h-0 w-full flex items-center justify-center">

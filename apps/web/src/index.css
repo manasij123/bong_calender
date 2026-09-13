@@ -73,3 +73,22 @@ body {
 .num-en {
   font-variant-numeric: tabular-nums;
 }
+
+@keyframes marquee-scroll {
+  0%,
+  10% {
+    transform: translateX(0);
+  }
+  45%,
+  55% {
+    transform: translateX(var(--marquee-shift, 0px));
+  }
+  90%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 6s ease-in-out infinite;
+}
