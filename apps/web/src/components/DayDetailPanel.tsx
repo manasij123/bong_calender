@@ -36,15 +36,18 @@ export default function DayDetailPanel({ detail, mode }: DayDetailPanelProps) {
       </div>
 
       {events.length > 0 && (
-        <div className={`grid gap-3 ${events.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div
+          className={`grid gap-3 justify-items-center ${events.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}
+        >
           {events.map((e) => (
-            <FestivalBadge
-              key={e.festival.id}
-              event={e}
-              bengaliDayLabel={toBengaliNumber(bengali.day)}
-              gregorianDayLabel={String(detail.date.day)}
-              mode={mode}
-            />
+            <div key={e.festival.id} className="w-full max-w-[220px]">
+              <FestivalBadge
+                event={e}
+                bengaliDayLabel={toBengaliNumber(bengali.day)}
+                gregorianDayLabel={String(detail.date.day)}
+                mode={mode}
+              />
+            </div>
           ))}
         </div>
       )}
