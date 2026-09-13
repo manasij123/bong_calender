@@ -42,7 +42,15 @@ export type FestivalIconKey =
 export type FestivalRule =
   | { kind: "tithi"; monthIndex: number; paksha: "shukla" | "krishna"; tithiIndex: number }
   | { kind: "bengaliMonthDay"; monthIndex: number; day: number }
-  | { kind: "bengaliMonthLastDay"; monthIndex: number };
+  | { kind: "bengaliMonthLastDay"; monthIndex: number }
+  | {
+      kind: "tithiNearAnchor";
+      anchorId: string;
+      minOffsetDays: number;
+      maxOffsetDays: number;
+      paksha: "shukla" | "krishna";
+      tithiIndex: number;
+    };
 
 export interface Festival {
   id: string;
@@ -56,6 +64,8 @@ export interface Festival {
 
 export const BENGALI_FESTIVALS: Festival[] = [
   { id: "poila-boishakh", nameBn: "পয়লা বৈশাখ (নববর্ষ)", nameEn: "Bengali New Year", category: "bengali-new-year", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 1 }, emoji: "🎊", icon: "sun" },
+  { id: "rabindra-jayanti", nameBn: "রবীন্দ্র জয়ন্তী (২৫ বৈশাখ)", nameEn: "Rabindra Jayanti (Tagore's Birthday)", category: "other", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 25 }, emoji: "📖", icon: "book" },
+  { id: "ramakrishna-jayanti", nameBn: "শ্রীরামকৃষ্ণের জন্মতিথি", nameEn: "Ramakrishna Jayanti", category: "other", rule: { kind: "tithi", monthIndex: 10, paksha: "shukla", tithiIndex: 2 }, emoji: "🪔", icon: "diya" },
   { id: "rath-yatra", nameBn: "রথযাত্রা", nameEn: "Rath Yatra", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 2 }, emoji: "🛺", icon: "chariot" },
   { id: "ulto-rath", nameBn: "উল্টো রথ", nameEn: "Ulto Rath", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 10 }, emoji: "🛺", icon: "chariot" },
   { id: "guru-purnima", nameBn: "গুরু পূর্ণিমা", nameEn: "Guru Purnima", category: "vrata", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 15 }, emoji: "🙏", icon: "moon-full" },
@@ -65,12 +75,19 @@ export const BENGALI_FESTIVALS: Festival[] = [
   { id: "ganesh-chaturthi", nameBn: "গণেশ চতুর্থী", nameEn: "Ganesh Chaturthi", category: "puja", rule: { kind: "tithi", monthIndex: 4, paksha: "shukla", tithiIndex: 4 }, emoji: "🐘", icon: "ganesh" },
   { id: "vishwakarma-puja", nameBn: "বিশ্বকর্মা পূজা", nameEn: "Vishwakarma Puja", category: "solar", rule: { kind: "bengaliMonthLastDay", monthIndex: 4 }, emoji: "⚙️", icon: "gear" },
   { id: "mahalaya", nameBn: "মহালয়া", nameEn: "Mahalaya", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔", icon: "diya" },
-  { id: "maha-shashthi", nameBn: "মহাষষ্ঠী", nameEn: "Maha Shashthi (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 6 }, emoji: "🪔", icon: "durga" },
-  { id: "maha-saptami", nameBn: "মহাসপ্তমী", nameEn: "Maha Saptami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 7 }, emoji: "🪔", icon: "durga" },
-  { id: "maha-ashtami", nameBn: "মহাষ্টমী", nameEn: "Maha Ashtami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 8 }, emoji: "🪔", icon: "durga" },
-  { id: "maha-nabami", nameBn: "মহানবমী", nameEn: "Maha Nabami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 9 }, emoji: "🪔", icon: "durga" },
-  { id: "vijaya-dashami", nameBn: "বিজয়া দশমী", nameEn: "Vijaya Dashami", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 10 }, emoji: "🪔", icon: "durga" },
-  { id: "kojagari-lakshmi-puja", nameBn: "কোজাগরী লক্ষ্মী পূজা", nameEn: "Kojagari Lakshmi Puja", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷", icon: "lakshmi" },
+  // Shashthi through Dashami are anchored to Mahalaya (rather than matched
+  // by raw Bengali-month index) because in an Adhik Maas year the Devi
+  // Paksha tithis can spill from Ashwin into Kartik -- searching "any
+  // shukla-shashthi within Ashwin" then grabs an unrelated, much earlier
+  // occurrence instead of the one that actually follows this year's
+  // Mahalaya. See e.g. 2026, where Ashwin also contains a leftover shukla
+  // paksha tail from Bhadra before Mahalaya even happens.
+  { id: "maha-shashthi", nameBn: "মহাষষ্ঠী", nameEn: "Maha Shashthi (Durga Puja)", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "mahalaya", minOffsetDays: 1, maxOffsetDays: 20, paksha: "shukla", tithiIndex: 6 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-saptami", nameBn: "মহাসপ্তমী", nameEn: "Maha Saptami (Durga Puja)", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "mahalaya", minOffsetDays: 1, maxOffsetDays: 20, paksha: "shukla", tithiIndex: 7 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-ashtami", nameBn: "মহাষ্টমী", nameEn: "Maha Ashtami (Durga Puja)", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "mahalaya", minOffsetDays: 1, maxOffsetDays: 20, paksha: "shukla", tithiIndex: 8 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-nabami", nameBn: "মহানবমী", nameEn: "Maha Nabami (Durga Puja)", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "mahalaya", minOffsetDays: 1, maxOffsetDays: 20, paksha: "shukla", tithiIndex: 9 }, emoji: "🪔", icon: "durga" },
+  { id: "vijaya-dashami", nameBn: "বিজয়া দশমী", nameEn: "Vijaya Dashami", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "mahalaya", minOffsetDays: 1, maxOffsetDays: 20, paksha: "shukla", tithiIndex: 10 }, emoji: "🪔", icon: "durga" },
+  { id: "kojagari-lakshmi-puja", nameBn: "কোজাগরী লক্ষ্মী পূজা", nameEn: "Kojagari Lakshmi Puja", category: "puja", rule: { kind: "tithiNearAnchor", anchorId: "vijaya-dashami", minOffsetDays: 1, maxOffsetDays: 10, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷", icon: "lakshmi" },
   { id: "kali-puja", nameBn: "কালীপূজা / দীপাবলি", nameEn: "Kali Puja / Diwali", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔", icon: "kali" },
   { id: "bhai-phota", nameBn: "ভাইফোঁটা", nameEn: "Bhai Phota (Bhai Dooj)", category: "vrata", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 2 }, emoji: "🎀", icon: "tilak" },
   { id: "chhath-puja", nameBn: "ছট পূজা", nameEn: "Chhath Puja", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 6 }, emoji: "🌅", icon: "sun" },
@@ -92,6 +109,7 @@ export const GREGORIAN_HOLIDAYS: {
   icon: FestivalIconKey;
 }[] = [
   { id: "new-year", nameBn: "ইংরেজি নববর্ষ", nameEn: "New Year's Day", month: 1, day: 1, emoji: "🎉", icon: "star" },
+  { id: "vivekananda-jayanti", nameBn: "স্বামী বিবেকানন্দের জন্মজয়ন্তী", nameEn: "Swami Vivekananda's Birthday", month: 1, day: 12, emoji: "🧘", icon: "diya" },
   { id: "republic-day", nameBn: "প্রজাতন্ত্র দিবস", nameEn: "Republic Day (India)", month: 1, day: 26, emoji: "🇮🇳", icon: "flag" },
   { id: "valentines-day", nameBn: "ভ্যালেন্টাইনস ডে", nameEn: "Valentine's Day", month: 2, day: 14, emoji: "❤️", icon: "heart" },
   { id: "may-day", nameBn: "মে দিবস", nameEn: "International Workers' Day", month: 5, day: 1, emoji: "🛠️", icon: "gear" },
@@ -99,6 +117,7 @@ export const GREGORIAN_HOLIDAYS: {
   { id: "teachers-day", nameBn: "শিক্ষক দিবস", nameEn: "Teachers' Day", month: 9, day: 5, emoji: "🍎", icon: "book" },
   { id: "gandhi-jayanti", nameBn: "গান্ধী জয়ন্তী", nameEn: "Gandhi Jayanti", month: 10, day: 2, emoji: "🕊️", icon: "dove" },
   { id: "childrens-day", nameBn: "শিশু দিবস", nameEn: "Children's Day", month: 11, day: 14, emoji: "🎈", icon: "balloon" },
+  { id: "sarada-devi-jayanti", nameBn: "সারদা দেবীর জন্মতিথি", nameEn: "Sarada Devi's Birthday", month: 12, day: 22, emoji: "🪔", icon: "diya" },
   { id: "christmas-eve", nameBn: "বড়দিনের প্রাক্কাল", nameEn: "Christmas Eve", month: 12, day: 24, emoji: "🎄", icon: "tree" },
   { id: "christmas", nameBn: "বড়দিন", nameEn: "Christmas", month: 12, day: 25, emoji: "🎄", icon: "tree" },
   { id: "new-years-eve", nameBn: "বর্ষবরণ", nameEn: "New Year's Eve", month: 12, day: 31, emoji: "🥂", icon: "star" },
@@ -180,27 +199,59 @@ export interface ResolvedEvent {
  */
 export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]): ResolvedEvent[] {
   const events: ResolvedEvent[] = [];
+  const resolvedIndexById = new Map<string, number>();
+
   for (const festival of BENGALI_FESTIVALS) {
     const rule = festival.rule;
+    if (rule.kind === "tithiNearAnchor") continue;
     if (rule.kind === "bengaliMonthDay") {
-      const day = yearDays.find(
+      const idx = yearDays.findIndex(
         (d) => d.bengali.monthIndex === rule.monthIndex && d.bengali.day === rule.day
       );
-      if (day) events.push({ festival, date: day.gregorian });
+      if (idx >= 0) {
+        events.push({ festival, date: yearDays[idx].gregorian });
+        resolvedIndexById.set(festival.id, idx);
+      }
     } else if (rule.kind === "bengaliMonthLastDay") {
       const monthDays = yearDays.filter((d) => d.bengali.monthIndex === rule.monthIndex);
       const last = monthDays[monthDays.length - 1];
-      if (last) events.push({ festival, date: last.gregorian });
+      if (last) {
+        events.push({ festival, date: last.gregorian });
+        resolvedIndexById.set(festival.id, yearDays.indexOf(last));
+      }
     } else if (rule.kind === "tithi") {
-      const match = yearDays.find(
+      const idx = yearDays.findIndex(
         (d) =>
           d.bengali.monthIndex === rule.monthIndex &&
           d.panchang.tithi.paksha === rule.paksha &&
           d.panchang.tithi.index === rule.tithiIndex
       );
-      if (match) events.push({ festival, date: match.gregorian });
+      if (idx >= 0) {
+        events.push({ festival, date: yearDays[idx].gregorian });
+        resolvedIndexById.set(festival.id, idx);
+      }
     }
   }
+
+  // Second pass: rules anchored to another (already-resolved) festival's
+  // date, searched within an offset window from it instead of by raw
+  // Bengali-month index -- see the comment on the Durga Puja rules above.
+  for (const festival of BENGALI_FESTIVALS) {
+    const rule = festival.rule;
+    if (rule.kind !== "tithiNearAnchor") continue;
+    const anchorIdx = resolvedIndexById.get(rule.anchorId);
+    if (anchorIdx === undefined) continue;
+    for (let offset = rule.minOffsetDays; offset <= rule.maxOffsetDays; offset++) {
+      const day = yearDays[anchorIdx + offset];
+      if (!day) break;
+      if (day.panchang.tithi.paksha === rule.paksha && day.panchang.tithi.index === rule.tithiIndex) {
+        events.push({ festival, date: day.gregorian });
+        resolvedIndexById.set(festival.id, anchorIdx + offset);
+        break;
+      }
+    }
+  }
+
   return events;
 }
 
