@@ -3,9 +3,10 @@ interface HeaderProps {
   onModeChange: (mode: "bn" | "en") => void;
   theme: "dark" | "light";
   onThemeToggle: () => void;
+  onOpenSearch: () => void;
 }
 
-export default function Header({ mode, onModeChange, theme, onThemeToggle }: HeaderProps) {
+export default function Header({ mode, onModeChange, theme, onThemeToggle, onOpenSearch }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-[color:var(--bg-elevated)] border-b border-[color:var(--border)]">
       <div className="mx-auto max-w-6xl px-3 sm:px-5 py-3 flex items-center justify-between gap-3">
@@ -38,6 +39,13 @@ export default function Header({ mode, onModeChange, theme, onThemeToggle }: Hea
               English
             </button>
           </div>
+          <button
+            onClick={onOpenSearch}
+            aria-label="Search"
+            className="h-9 w-9 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
+          >
+            🔍
+          </button>
           <button
             onClick={onThemeToggle}
             aria-label="Toggle theme"

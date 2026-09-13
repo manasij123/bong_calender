@@ -75,6 +75,12 @@ export function getEventsForDate(date: CalendarDate, loc: GeoLocation = KOLKATA)
   return idx.get(dateKey(date)) ?? [];
 }
 
+/** Every festival/holiday occurrence within a Gregorian year, for building a search index. */
+export function getFestivalEventsForYear(gregorianYear: number, loc: GeoLocation = KOLKATA): ResolvedEvent[] {
+  const idx = getGregorianYearEventIndexCached(gregorianYear, loc);
+  return Array.from(idx.values()).flat();
+}
+
 export function getDayDetail(date: CalendarDate, loc: GeoLocation = KOLKATA): DayDetail {
   const info = getDayInfoCached(date, loc);
   const events = getEventsForDate(date, loc);

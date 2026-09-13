@@ -19,6 +19,7 @@ import CalendarGrid from "./components/CalendarGrid";
 import DayDetailPanel from "./components/DayDetailPanel";
 import EventAgenda from "./components/EventAgenda";
 import MobileSlideDrawer from "./components/MobileSlideDrawer";
+import SearchOverlay from "./components/SearchOverlay";
 
 type Mode = "bn" | "en";
 type Theme = "dark" | "light";
@@ -54,6 +55,7 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState<CalendarDate>(t);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileAgendaOpen, setMobileAgendaOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const cells = useMemo<DayCell[]>(() => {
     return mode === "bn"
@@ -131,6 +133,19 @@ export default function App() {
     setMobileDrawerOpen(true);
   }
 
+  function handleSearchSelectDate(date: CalendarDate) {
+    if (mode === "bn") {
+      const bd = toBengaliDate(date, KOLKATA);
+      setBengaliYear(bd.year);
+      setBengaliMonthIndex(bd.monthIndex);
+    } else {
+      setGregorianYear(date.year);
+      setGregorianMonth(date.month);
+    }
+    setSelectedDate(date);
+    setMobileDrawerOpen(true);
+  }
+
   const title =
     mode === "bn"
       ? `${BENGALI_MONTH_NAMES[bengaliMonthIndex]} ${toBengaliNumber(bengaliYear)}`
@@ -157,7 +172,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen pb-10">
-      <Header mode={mode} onModeChange={handleModeChange} theme={theme} onThemeToggle={toggleTheme} />
+      <Header
+        mode={mode}
+        onModeChange={handleModeChange}
+        theme={theme}
+        onThemeToggle={toggleTheme}
+        onOpenSearch={() => setSearchOpen(true)}
+      />
 
       <main className="mx-auto max-w-6xl px-3 sm:px-5 pt-3 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 items-start">
         <div className="flex flex-col gap-4 min-w-0">
@@ -195,6 +216,13 @@ export default function App() {
       <MobileSlideDrawer open={mobileAgendaOpen} onClose={() => setMobileAgendaOpen(false)} closeLabel="বন্ধ করুন">
         <EventAgenda mode={mode} cells={cells} selectedKey={dateKey(selectedDate)} todayKey={todayKey} onSelect={handleSelectFromAgenda} />
       </MobileSlideDrawer>
+
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        mode={mode}
+        onSelectDate={handleSearchSelectDate}
+      />
 
       <footer className="mx-auto max-w-6xl px-5 pt-6 text-center text-[11px] text-[color:var(--text-muted)] bn">
         তৈরি হয়েছে ভালোবাসা দিয়ে — বাংলা পঞ্জিকা ওয়েব ও ডেস্কটপ অ্যাপ
