@@ -45,6 +45,11 @@ export const FESTIVAL_IMAGES: Record<string, string[]> = {
   "christmas": [`${BASE}/christmas.png`],
   "good-friday": [`${BASE}/good-friday.png`],
   "easter-sunday": [`${BASE}/easter-sunday.png`],
+
+  "eid-ul-fitr": [`${BASE}/eid-ul-fitr.png`],
+  "eid-ul-adha": [`${BASE}/eid-ul-adha.png`],
+  "shab-e-barat": [`${BASE}/shab-e-barat.png`],
+  "muharram": [`${BASE}/muharram.png`],
 };
 
 /** Pseudo-keys for the special-tithi badges (not tied to a Festival record). */

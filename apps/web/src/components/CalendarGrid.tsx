@@ -83,25 +83,24 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              className={`group relative aspect-square sm:aspect-[4/4.4] rounded-xl sm:rounded-2xl border overflow-hidden transition-all
+              style={badge ? { backgroundColor: hexToRgba(badge.color, 0.16) } : undefined}
+              className={`group relative aspect-[4/5.2] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
             >
-              <span
-                className={`absolute top-1 right-1 z-10 rounded-md bg-[color:var(--bg-elevated)]/70 px-1 py-0.5 text-[9px] sm:text-[11px] font-semibold leading-none ${
-                  mode === "bn" ? "num-en" : "bn"
-                } ${isSunday ? "text-[color:var(--today-ring)]" : "text-[color:var(--text-muted)]"}`}
-              >
-                {secondary}
-              </span>
+              <div className="flex justify-end px-1 pt-1 shrink-0">
+                <span
+                  className={`rounded-md bg-[color:var(--bg-elevated)]/70 px-1 py-0.5 text-[9px] sm:text-[11px] font-semibold leading-none ${
+                    mode === "bn" ? "num-en" : "bn"
+                  } ${isSunday ? "text-[color:var(--today-ring)]" : "text-[color:var(--text-muted)]"}`}
+                >
+                  {secondary}
+                </span>
+              </div>
 
               {badge ? (
-                <div
-                  className="absolute inset-0 flex flex-col items-center justify-center gap-0.5 py-2 px-1"
-                  style={{ backgroundColor: hexToRgba(badge.color, 0.16) }}
-                  title={badge.label}
-                >
+                <div className="flex-1 min-h-0 w-full flex flex-col items-center justify-center gap-0.5 pb-1.5 px-1" title={badge.label}>
                   {badge.images ? (
                     <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-0" />
                   ) : (
@@ -117,7 +116,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   </span>
                 </div>
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="flex-1 min-h-0 w-full flex items-center justify-center">
                   <span
                     className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
                       isSunday ? "text-[color:var(--today-ring)]" : ""
