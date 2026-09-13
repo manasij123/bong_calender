@@ -83,7 +83,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              className={`group relative aspect-[4/7] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border px-1.5 py-1.5 sm:px-2 sm:py-2 flex flex-col items-start text-left transition-all
+              className={`group relative aspect-[4/7] sm:aspect-[4/5.6] rounded-xl sm:rounded-2xl border px-1.5 py-1.5 sm:px-2 sm:py-2 flex flex-col items-start text-left transition-all
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
@@ -111,7 +111,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   title={badge.label}
                 >
                   {badge.images ? (
-                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-[40px] sm:min-h-[48px]" />
+                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-[28px] sm:min-h-[32px]" />
                   ) : (
                     <span className="h-5 w-5 sm:h-7 sm:w-7 shrink-0" style={{ color: badge.color }}>
                       <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
