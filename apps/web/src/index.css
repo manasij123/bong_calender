@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f4f2ee;
+  --bg-elevated: #ffffff;
+  --bg-soft: #ebe7e0;
+  --text: #201c16;
+  --text-muted: #6b6558;
+  --border: #ded7c9;
+  --accent: #b3541e;
+  --accent-2: #8a3f8b;
+  --accent-3: #1f7a5c;
+  --today-ring: #d4432b;
+  --shukla: #c78a2c;
+  --krishna: #5b6b9e;
+}
+
+.dark {
+  --bg: #0d0e14;
+  --bg-elevated: #171a26;
+  --bg-soft: #1e2130;
+  --text: #f1efe9;
+  --text-muted: #9a9baa;
+  --border: #2a2e40;
+  --accent: #f0a04b;
+  --accent-2: #d47bd9;
+  --accent-3: #55d6a8;
+  --today-ring: #ff6b57;
+  --shukla: #f2c14e;
+  --krishna: #8ea3ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at top, var(--bg-soft) 0%, var(--bg) 55%);
+  color: var(--text);
+  font-family: "Hind Siliguri", "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.bn {
+  font-family: "Hind Siliguri", "Tiro Bangla", sans-serif;
+}
+
+.num-en {
+  font-variant-numeric: tabular-nums;
+}
