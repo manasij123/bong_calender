@@ -1,6 +1,8 @@
 import { DayCell, dateKey, toBengaliNumber } from "@bong/panjika-core";
 import FestivalIconGlyph, { IconKey } from "./festivalIcons";
+import CyclingImage from "./CyclingImage";
 import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgba } from "../lib/festivalColor";
+import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
 const WEEKDAY_HEADERS_BN = ["র", "সো", "ম", "বু", "বৃ", "শু", "শ"];
 const WEEKDAY_HEADERS_EN = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -15,6 +17,7 @@ interface CalendarGridProps {
 
 interface CellBadge {
   icon: IconKey;
+  images?: string[];
   color: string;
   label: string;
 }
@@ -24,6 +27,7 @@ function badgeFor(cell: DayCell, mode: "bn" | "en"): CellBadge | null {
   if (event) {
     return {
       icon: event.festival.icon,
+      images: FESTIVAL_IMAGES[event.festival.id],
       color: CATEGORY_COLOR[event.festival.category],
       label: mode === "bn" ? event.festival.nameBn : event.festival.nameEn,
     };
@@ -32,10 +36,10 @@ function badgeFor(cell: DayCell, mode: "bn" | "en"): CellBadge | null {
   if (tithi.index === 15) {
     return tithi.paksha === "shukla"
       ? { icon: "moon-full", color: TITHI_BADGE_COLOR.purnima, label: tithi.name }
-      : { icon: "moon-new", color: TITHI_BADGE_COLOR.amavasya, label: tithi.name };
+      : { icon: "moon-new", images: TITHI_IMAGES.amavasya, color: TITHI_BADGE_COLOR.amavasya, label: tithi.name };
   }
   if (tithi.index === 11) {
-    return { icon: "ekadashi", color: TITHI_BADGE_COLOR.ekadashi, label: tithi.name };
+    return { icon: "ekadashi", images: TITHI_IMAGES.ekadashi, color: TITHI_BADGE_COLOR.ekadashi, label: tithi.name };
   }
   return null;
 }
@@ -106,9 +110,13 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   }}
                   title={badge.label}
                 >
-                  <span className="h-4 w-4 sm:h-6 sm:w-6 shrink-0" style={{ color: badge.color }}>
-                    <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
-                  </span>
+                  {badge.images ? (
+                    <CyclingImage images={badge.images} alt={badge.label} className="h-6 w-6 sm:h-9 sm:w-9 shrink-0" />
+                  ) : (
+                    <span className="h-4 w-4 sm:h-6 sm:w-6 shrink-0" style={{ color: badge.color }}>
+                      <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
+                    </span>
+                  )}
                   <span
                     className="text-[6.5px] sm:text-[8px] leading-tight text-center bn line-clamp-1 px-0.5"
                     style={{ color: badge.color }}
