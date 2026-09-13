@@ -111,14 +111,14 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   title={badge.label}
                 >
                   {badge.images ? (
-                    <CyclingImage images={badge.images} alt={badge.label} className="h-6 w-6 sm:h-9 sm:w-9 shrink-0" />
+                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-0" />
                   ) : (
                     <span className="h-4 w-4 sm:h-6 sm:w-6 shrink-0" style={{ color: badge.color }}>
                       <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
                     </span>
                   )}
                   <span
-                    className="text-[6.5px] sm:text-[8px] leading-tight text-center bn line-clamp-1 px-0.5"
+                    className="text-[6.5px] sm:text-[8px] leading-tight text-center bn line-clamp-1 px-0.5 shrink-0"
                     style={{ color: badge.color }}
                   >
                     {badge.label}
