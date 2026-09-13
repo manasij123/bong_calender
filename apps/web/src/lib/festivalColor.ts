@@ -6,6 +6,7 @@ export const CATEGORY_COLOR: Record<FestivalCategory, string> = {
   vrata: "#8a5fd1",
   solar: "#3f9e6d",
   other: "#4a8fd9",
+  islamic: "#1a8f8f",
 };
 
 export const TITHI_BADGE_COLOR = {

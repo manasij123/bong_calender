@@ -7,8 +7,9 @@
 import { CalendarDate, dateKey, findBengaliMonthStart, addDays } from "./bengaliCalendar.js";
 import { DayInfo } from "./dayInfo.js";
 import { GeoLocation, KOLKATA } from "./solarTime.js";
+import { HijriDate, hijriToGregorian, gregorianToHijri } from "./hijri.js";
 
-export type FestivalCategory = "bengali-new-year" | "puja" | "vrata" | "solar" | "other";
+export type FestivalCategory = "bengali-new-year" | "puja" | "vrata" | "solar" | "other" | "islamic";
 
 export type FestivalIconKey =
   | "durga"
@@ -35,7 +36,8 @@ export type FestivalIconKey =
   | "gear"
   | "cross"
   | "egg"
-  | "star";
+  | "star"
+  | "crescent";
 
 export type FestivalRule =
   | { kind: "tithi"; monthIndex: number; paksha: "shukla" | "krishna"; tithiIndex: number }
@@ -101,6 +103,52 @@ export const GREGORIAN_HOLIDAYS: {
   { id: "christmas", nameBn: "বড়দিন", nameEn: "Christmas", month: 12, day: 25, emoji: "🎄", icon: "tree" },
   { id: "new-years-eve", nameBn: "বর্ষবরণ", nameEn: "New Year's Eve", month: 12, day: 31, emoji: "🥂", icon: "star" },
 ];
+
+export const ISLAMIC_HOLIDAYS: {
+  id: string;
+  nameBn: string;
+  nameEn: string;
+  hijriMonth: number;
+  hijriDay: number;
+  emoji: string;
+  icon: FestivalIconKey;
+}[] = [
+  { id: "muharram", nameBn: "পয়লা মহররম (হিজরি নববর্ষ)", nameEn: "Islamic New Year (Muharram)", hijriMonth: 1, hijriDay: 1, emoji: "🌙", icon: "crescent" },
+  { id: "ashura", nameBn: "আশুরা", nameEn: "Ashura", hijriMonth: 1, hijriDay: 10, emoji: "🌙", icon: "crescent" },
+  { id: "eid-e-miladunnabi", nameBn: "ঈদে মিলাদুন্নবী", nameEn: "Eid-e-Miladunnabi (Mawlid)", hijriMonth: 3, hijriDay: 12, emoji: "🌙", icon: "crescent" },
+  { id: "shab-e-barat", nameBn: "শবে বরাত", nameEn: "Shab-e-Barat", hijriMonth: 8, hijriDay: 15, emoji: "🌙", icon: "crescent" },
+  { id: "shab-e-qadr", nameBn: "শবে কদর", nameEn: "Shab-e-Qadr", hijriMonth: 9, hijriDay: 27, emoji: "🌙", icon: "crescent" },
+  { id: "eid-ul-fitr", nameBn: "ঈদুল ফিতর", nameEn: "Eid-ul-Fitr", hijriMonth: 10, hijriDay: 1, emoji: "🌙", icon: "crescent" },
+  { id: "eid-ul-adha", nameBn: "ঈদুল আজহা", nameEn: "Eid-ul-Adha", hijriMonth: 12, hijriDay: 10, emoji: "🌙", icon: "crescent" },
+];
+
+/**
+ * Resolve Islamic (Hijri) holidays for a Gregorian year, using the tabular
+ * civil Hijri calendar (see hijri.ts) - a deterministic approximation of
+ * the real moon-sighting-based calendar, so treat these dates the same
+ * way as the sankranti caveat: usually right, occasionally a day off from
+ * a specific country's official moon-sighting announcement.
+ */
+export function resolveIslamicHolidays(gregorianYear: number): ResolvedEvent[] {
+  const hijriYearAtStart = gregorianToHijri(gregorianYear, 1, 1).year;
+  const hijriYearAtEnd = gregorianToHijri(gregorianYear, 12, 31).year;
+  const candidateYears = new Set([hijriYearAtStart, hijriYearAtStart + 1, hijriYearAtEnd]);
+
+  const events: ResolvedEvent[] = [];
+  for (const hy of candidateYears) {
+    for (const h of ISLAMIC_HOLIDAYS) {
+      const hijriDate: HijriDate = { year: hy, month: h.hijriMonth, day: h.hijriDay };
+      const date = hijriToGregorian(hijriDate);
+      if (date.year === gregorianYear) {
+        events.push({
+          festival: { id: h.id, nameBn: h.nameBn, nameEn: h.nameEn, category: "islamic", emoji: h.emoji, icon: h.icon },
+          date,
+        });
+      }
+    }
+  }
+  return events;
+}
 
 /** Meeus/Jones/Butcher algorithm for the Gregorian Easter Sunday date. */
 export function gregorianEaster(year: number): CalendarDate {
@@ -202,6 +250,7 @@ export function getEventIndexForGregorianYear(
     events.push(...resolveBengaliFestivals(by, days));
   }
   events.push(...resolveGregorianHolidays(gregorianYear));
+  events.push(...resolveIslamicHolidays(gregorianYear));
 
   const filtered = events.filter((e) => e.date.year === gregorianYear);
   return buildEventIndex(filtered);

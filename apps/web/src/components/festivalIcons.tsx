@@ -57,6 +57,21 @@ function MoonNew({ className }: GlyphProps) {
   );
 }
 
+function Crescent({ className }: GlyphProps) {
+  return (
+    <svg viewBox="0 0 100 100" className={className}>
+      <path
+        d="M62 18 A34 34 0 1 0 62 82 A25 25 0 1 1 62 18 Z"
+        fill="currentColor"
+      />
+      <path
+        d="M78 24 L81.5 32 L90 33.5 L83.5 39.5 L85 48 L78 43.5 L71 48 L72.5 39.5 L66 33.5 L74.5 32 Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 function Ekadashi({ className }: GlyphProps) {
   return (
     <svg viewBox="0 0 100 100" className={className}>
@@ -361,6 +376,7 @@ const GLYPHS: Record<IconKey, (p: GlyphProps) => JSX.Element> = {
   "moon-full": MoonFull,
   "moon-new": MoonNew,
   ekadashi: Ekadashi,
+  crescent: Crescent,
   diya: Diya,
   chariot: Chariot,
   flag: Flag,

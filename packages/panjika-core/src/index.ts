@@ -8,5 +8,6 @@ export * from "./numerals.js";
 export * from "./bengaliCalendar.js";
 export * from "./dayInfo.js";
 export * from "./festivals.js";
+export * from "./hijri.js";
 export * from "./muhurat.js";
 export * from "./api.js";
