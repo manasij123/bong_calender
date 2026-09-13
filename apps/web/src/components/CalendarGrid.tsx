@@ -84,7 +84,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
               key={key}
               onClick={() => onSelect(cell)}
               style={badge ? { backgroundColor: hexToRgba(badge.color, 0.16) } : undefined}
-              className={`group relative aspect-[4/5.2] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
+              className={`group relative aspect-[4/6.6] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
