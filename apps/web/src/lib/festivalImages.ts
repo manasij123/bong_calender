@@ -50,6 +50,15 @@ export const FESTIVAL_IMAGES: Record<string, string[]> = {
   "eid-ul-adha": [`${BASE}/eid-ul-adha.png`],
   "shab-e-barat": [`${BASE}/shab-e-barat.png`],
   "muharram": [`${BASE}/muharram.png`],
+
+  "rabindra-jayanti": [`${BASE}/rabindranath.png`],
+  "rabindra-tirodhan": [`${BASE}/rabindranath.png`],
+  "ramakrishna-jayanti": [`${BASE}/ramakrishna.png`],
+  "ramakrishna-tirodhan": [`${BASE}/ramakrishna.png`],
+  "vivekananda-jayanti": [`${BASE}/vivekananda.png`],
+  "vivekananda-tirodhan": [`${BASE}/vivekananda.png`],
+  "sarada-devi-jayanti": [`${BASE}/sarada-devi.png`],
+  "sarada-devi-tirodhan": [`${BASE}/sarada-devi.png`],
 };
 
 /** Pseudo-keys for the special-tithi badges (not tied to a Festival record). */
