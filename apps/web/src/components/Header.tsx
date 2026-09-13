@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ mode, onModeChange, theme, onThemeToggle }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-md bg-[color:var(--bg)]/85 border-b border-[color:var(--border)]">
+    <header className="sticky top-0 z-30 bg-[color:var(--bg-elevated)] border-b border-[color:var(--border)]">
       <div className="mx-auto max-w-6xl px-3 sm:px-5 py-3 flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
           <div className="h-9 w-9 shrink-0 rounded-xl bg-gradient-to-br from-[color:var(--accent)] to-[color:var(--accent-2)] grid place-items-center text-lg shadow-glow">
