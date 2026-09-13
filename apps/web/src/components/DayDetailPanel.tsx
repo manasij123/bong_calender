@@ -1,6 +1,7 @@
 import { DayDetail, KOLKATA, toBengaliNumber, BENGALI_MONTH_NAMES_EN, ENGLISH_MONTH_NAMES } from "@bong/panjika-core";
 import { formatTimeBn, formatTimeRangeBn } from "../lib/format";
 import StatTile from "./StatTile";
+import FestivalBadge from "./FestivalBadge";
 
 interface DayDetailPanelProps {
   detail: DayDetail;
@@ -35,18 +36,15 @@ export default function DayDetailPanel({ detail, mode }: DayDetailPanelProps) {
       </div>
 
       {events.length > 0 && (
-        <div className="flex flex-col gap-1.5">
+        <div className={`grid gap-3 ${events.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
           {events.map((e) => (
-            <div
+            <FestivalBadge
               key={e.festival.id}
-              className="flex items-center gap-2 rounded-xl border border-[color:var(--accent)]/40 bg-[color:var(--accent)]/10 px-3 py-2"
-            >
-              <span className="text-lg">{e.festival.emoji}</span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold bn truncate">{e.festival.nameBn}</p>
-                <p className="text-[11px] text-[color:var(--text-muted)] truncate">{e.festival.nameEn}</p>
-              </div>
-            </div>
+              event={e}
+              bengaliDayLabel={toBengaliNumber(bengali.day)}
+              gregorianDayLabel={String(detail.date.day)}
+              mode={mode}
+            />
           ))}
         </div>
       )}

@@ -1,4 +1,6 @@
 import { DayCell, dateKey, toBengaliNumber, ENGLISH_MONTH_NAMES } from "@bong/panjika-core";
+import FestivalIconGlyph from "./festivalIcons";
+import { CATEGORY_COLOR } from "../lib/festivalColor";
 
 interface EventAgendaProps {
   mode: "bn" | "en";
@@ -34,9 +36,18 @@ export default function EventAgenda({ mode, cells, selectedKey, todayKey, onSele
                   {dateLabel}, {cell.info.bengali.weekdayName}
                 </p>
                 {cell.events.length > 0 ? (
-                  <p className="text-xs text-[color:var(--text-muted)] bn truncate">
-                    {cell.events.map((e) => `${e.festival.emoji} ${mode === "bn" ? e.festival.nameBn : e.festival.nameEn}`).join(" · ")}
-                  </p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {cell.events.map((e) => (
+                      <span key={e.festival.id} className="flex items-center gap-1 min-w-0">
+                        <span className="h-3.5 w-3.5 shrink-0" style={{ color: CATEGORY_COLOR[e.festival.category] }}>
+                          <FestivalIconGlyph icon={e.festival.icon} className="h-full w-full" />
+                        </span>
+                        <span className="text-xs text-[color:var(--text-muted)] bn truncate">
+                          {mode === "bn" ? e.festival.nameBn : e.festival.nameEn}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
                 ) : (
                   <p className="text-xs text-[color:var(--text-muted)]/70 bn truncate">
                     {cell.info.panchang.tithi.name} · {cell.info.panchang.nakshatra.name}

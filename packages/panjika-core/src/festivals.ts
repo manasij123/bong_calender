@@ -10,6 +10,33 @@ import { GeoLocation, KOLKATA } from "./solarTime.js";
 
 export type FestivalCategory = "bengali-new-year" | "puja" | "vrata" | "solar" | "other";
 
+export type FestivalIconKey =
+  | "durga"
+  | "ganesh"
+  | "saraswati"
+  | "lakshmi"
+  | "kali"
+  | "shiva"
+  | "krishna"
+  | "diya"
+  | "rakhi"
+  | "tilak"
+  | "moon-full"
+  | "moon-new"
+  | "sun"
+  | "chariot"
+  | "flag"
+  | "tree"
+  | "heart"
+  | "dove"
+  | "book"
+  | "balloon"
+  | "colors"
+  | "gear"
+  | "cross"
+  | "egg"
+  | "star";
+
 export type FestivalRule =
   | { kind: "tithi"; monthIndex: number; paksha: "shukla" | "krishna"; tithiIndex: number }
   | { kind: "bengaliMonthDay"; monthIndex: number; day: number }
@@ -22,34 +49,35 @@ export interface Festival {
   category: FestivalCategory;
   rule: FestivalRule;
   emoji: string;
+  icon: FestivalIconKey;
 }
 
 export const BENGALI_FESTIVALS: Festival[] = [
-  { id: "poila-boishakh", nameBn: "পয়লা বৈশাখ (নববর্ষ)", nameEn: "Bengali New Year", category: "bengali-new-year", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 1 }, emoji: "🎊" },
-  { id: "rath-yatra", nameBn: "রথযাত্রা", nameEn: "Rath Yatra", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 2 }, emoji: "🛺" },
-  { id: "ulto-rath", nameBn: "উল্টো রথ", nameEn: "Ulto Rath", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 10 }, emoji: "🛺" },
-  { id: "guru-purnima", nameBn: "গুরু পূর্ণিমা", nameEn: "Guru Purnima", category: "vrata", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 15 }, emoji: "🙏" },
-  { id: "jhulan-yatra", nameBn: "ঝুলনযাত্রা শুরু", nameEn: "Jhulan Yatra Begins", category: "puja", rule: { kind: "tithi", monthIndex: 3, paksha: "shukla", tithiIndex: 11 }, emoji: "🎐" },
-  { id: "rakhi-purnima", nameBn: "রাখী বন্ধন / ঝুলন পূর্ণিমা", nameEn: "Rakhi Bandhan (Raksha Bandhan)", category: "vrata", rule: { kind: "tithi", monthIndex: 3, paksha: "shukla", tithiIndex: 15 }, emoji: "🧵" },
-  { id: "janmashtami", nameBn: "জন্মাষ্টমী", nameEn: "Janmashtami", category: "puja", rule: { kind: "tithi", monthIndex: 4, paksha: "krishna", tithiIndex: 8 }, emoji: "🪈" },
-  { id: "ganesh-chaturthi", nameBn: "গণেশ চতুর্থী", nameEn: "Ganesh Chaturthi", category: "puja", rule: { kind: "tithi", monthIndex: 4, paksha: "shukla", tithiIndex: 4 }, emoji: "🐘" },
-  { id: "vishwakarma-puja", nameBn: "বিশ্বকর্মা পূজা", nameEn: "Vishwakarma Puja", category: "solar", rule: { kind: "bengaliMonthLastDay", monthIndex: 4 }, emoji: "⚙️" },
-  { id: "mahalaya", nameBn: "মহালয়া", nameEn: "Mahalaya", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔" },
-  { id: "maha-shashthi", nameBn: "মহাষষ্ঠী", nameEn: "Maha Shashthi (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 6 }, emoji: "🪔" },
-  { id: "maha-saptami", nameBn: "মহাসপ্তমী", nameEn: "Maha Saptami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 7 }, emoji: "🪔" },
-  { id: "maha-ashtami", nameBn: "মহাষ্টমী", nameEn: "Maha Ashtami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 8 }, emoji: "🪔" },
-  { id: "maha-nabami", nameBn: "মহানবমী", nameEn: "Maha Nabami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 9 }, emoji: "🪔" },
-  { id: "vijaya-dashami", nameBn: "বিজয়া দশমী", nameEn: "Vijaya Dashami", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 10 }, emoji: "🪔" },
-  { id: "kojagari-lakshmi-puja", nameBn: "কোজাগরী লক্ষ্মী পূজা", nameEn: "Kojagari Lakshmi Puja", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷" },
-  { id: "kali-puja", nameBn: "কালীপূজা / দীপাবলি", nameEn: "Kali Puja / Diwali", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔" },
-  { id: "bhai-phota", nameBn: "ভাইফোঁটা", nameEn: "Bhai Phota (Bhai Dooj)", category: "vrata", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 2 }, emoji: "🎀" },
-  { id: "chhath-puja", nameBn: "ছট পূজা", nameEn: "Chhath Puja", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 6 }, emoji: "🌅" },
-  { id: "rash-purnima", nameBn: "রাস পূর্ণিমা", nameEn: "Rash Purnima", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷" },
-  { id: "saraswati-puja", nameBn: "সরস্বতী পূজা (বসন্ত পঞ্চমী)", nameEn: "Saraswati Puja (Basant Panchami)", category: "puja", rule: { kind: "tithi", monthIndex: 9, paksha: "shukla", tithiIndex: 5 }, emoji: "📚" },
-  { id: "shivratri", nameBn: "শিবরাত্রি", nameEn: "Maha Shivaratri", category: "vrata", rule: { kind: "tithi", monthIndex: 10, paksha: "krishna", tithiIndex: 14 }, emoji: "🔱" },
-  { id: "dol-purnima", nameBn: "দোলযাত্রা / হোলি", nameEn: "Dol Purnima / Holi", category: "puja", rule: { kind: "tithi", monthIndex: 10, paksha: "shukla", tithiIndex: 15 }, emoji: "🎨" },
-  { id: "annapurna-puja", nameBn: "অন্নপূর্ণা পূজা", nameEn: "Annapurna Puja", category: "puja", rule: { kind: "tithi", monthIndex: 10, paksha: "krishna", tithiIndex: 8 }, emoji: "🍚" },
-  { id: "charak-gajan", nameBn: "চড়ক পূজা / গাজন", nameEn: "Charak Puja / Gajan", category: "solar", rule: { kind: "bengaliMonthLastDay", monthIndex: 11 }, emoji: "🔥" },
+  { id: "poila-boishakh", nameBn: "পয়লা বৈশাখ (নববর্ষ)", nameEn: "Bengali New Year", category: "bengali-new-year", rule: { kind: "bengaliMonthDay", monthIndex: 0, day: 1 }, emoji: "🎊", icon: "sun" },
+  { id: "rath-yatra", nameBn: "রথযাত্রা", nameEn: "Rath Yatra", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 2 }, emoji: "🛺", icon: "chariot" },
+  { id: "ulto-rath", nameBn: "উল্টো রথ", nameEn: "Ulto Rath", category: "puja", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 10 }, emoji: "🛺", icon: "chariot" },
+  { id: "guru-purnima", nameBn: "গুরু পূর্ণিমা", nameEn: "Guru Purnima", category: "vrata", rule: { kind: "tithi", monthIndex: 2, paksha: "shukla", tithiIndex: 15 }, emoji: "🙏", icon: "moon-full" },
+  { id: "jhulan-yatra", nameBn: "ঝুলনযাত্রা শুরু", nameEn: "Jhulan Yatra Begins", category: "puja", rule: { kind: "tithi", monthIndex: 3, paksha: "shukla", tithiIndex: 11 }, emoji: "🎐", icon: "diya" },
+  { id: "rakhi-purnima", nameBn: "রাখী বন্ধন / ঝুলন পূর্ণিমা", nameEn: "Rakhi Bandhan (Raksha Bandhan)", category: "vrata", rule: { kind: "tithi", monthIndex: 3, paksha: "shukla", tithiIndex: 15 }, emoji: "🧵", icon: "rakhi" },
+  { id: "janmashtami", nameBn: "জন্মাষ্টমী", nameEn: "Janmashtami", category: "puja", rule: { kind: "tithi", monthIndex: 4, paksha: "krishna", tithiIndex: 8 }, emoji: "🪈", icon: "krishna" },
+  { id: "ganesh-chaturthi", nameBn: "গণেশ চতুর্থী", nameEn: "Ganesh Chaturthi", category: "puja", rule: { kind: "tithi", monthIndex: 4, paksha: "shukla", tithiIndex: 4 }, emoji: "🐘", icon: "ganesh" },
+  { id: "vishwakarma-puja", nameBn: "বিশ্বকর্মা পূজা", nameEn: "Vishwakarma Puja", category: "solar", rule: { kind: "bengaliMonthLastDay", monthIndex: 4 }, emoji: "⚙️", icon: "gear" },
+  { id: "mahalaya", nameBn: "মহালয়া", nameEn: "Mahalaya", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔", icon: "diya" },
+  { id: "maha-shashthi", nameBn: "মহাষষ্ঠী", nameEn: "Maha Shashthi (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 6 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-saptami", nameBn: "মহাসপ্তমী", nameEn: "Maha Saptami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 7 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-ashtami", nameBn: "মহাষ্টমী", nameEn: "Maha Ashtami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 8 }, emoji: "🪔", icon: "durga" },
+  { id: "maha-nabami", nameBn: "মহানবমী", nameEn: "Maha Nabami (Durga Puja)", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 9 }, emoji: "🪔", icon: "durga" },
+  { id: "vijaya-dashami", nameBn: "বিজয়া দশমী", nameEn: "Vijaya Dashami", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 10 }, emoji: "🪔", icon: "durga" },
+  { id: "kojagari-lakshmi-puja", nameBn: "কোজাগরী লক্ষ্মী পূজা", nameEn: "Kojagari Lakshmi Puja", category: "puja", rule: { kind: "tithi", monthIndex: 5, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷", icon: "lakshmi" },
+  { id: "kali-puja", nameBn: "কালীপূজা / দীপাবলি", nameEn: "Kali Puja / Diwali", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "krishna", tithiIndex: 15 }, emoji: "🪔", icon: "kali" },
+  { id: "bhai-phota", nameBn: "ভাইফোঁটা", nameEn: "Bhai Phota (Bhai Dooj)", category: "vrata", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 2 }, emoji: "🎀", icon: "tilak" },
+  { id: "chhath-puja", nameBn: "ছট পূজা", nameEn: "Chhath Puja", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 6 }, emoji: "🌅", icon: "sun" },
+  { id: "rash-purnima", nameBn: "রাস পূর্ণিমা", nameEn: "Rash Purnima", category: "puja", rule: { kind: "tithi", monthIndex: 6, paksha: "shukla", tithiIndex: 15 }, emoji: "🪷", icon: "moon-full" },
+  { id: "saraswati-puja", nameBn: "সরস্বতী পূজা (বসন্ত পঞ্চমী)", nameEn: "Saraswati Puja (Basant Panchami)", category: "puja", rule: { kind: "tithi", monthIndex: 9, paksha: "shukla", tithiIndex: 5 }, emoji: "📚", icon: "saraswati" },
+  { id: "shivratri", nameBn: "শিবরাত্রি", nameEn: "Maha Shivaratri", category: "vrata", rule: { kind: "tithi", monthIndex: 10, paksha: "krishna", tithiIndex: 14 }, emoji: "🔱", icon: "shiva" },
+  { id: "dol-purnima", nameBn: "দোলযাত্রা / হোলি", nameEn: "Dol Purnima / Holi", category: "puja", rule: { kind: "tithi", monthIndex: 10, paksha: "shukla", tithiIndex: 15 }, emoji: "🎨", icon: "colors" },
+  { id: "annapurna-puja", nameBn: "অন্নপূর্ণা পূজা", nameEn: "Annapurna Puja", category: "puja", rule: { kind: "tithi", monthIndex: 10, paksha: "krishna", tithiIndex: 8 }, emoji: "🍚", icon: "lakshmi" },
+  { id: "charak-gajan", nameBn: "চড়ক পূজা / গাজন", nameEn: "Charak Puja / Gajan", category: "solar", rule: { kind: "bengaliMonthLastDay", monthIndex: 11 }, emoji: "🔥", icon: "shiva" },
 ];
 
 export const GREGORIAN_HOLIDAYS: {
@@ -59,18 +87,19 @@ export const GREGORIAN_HOLIDAYS: {
   month: number;
   day: number;
   emoji: string;
+  icon: FestivalIconKey;
 }[] = [
-  { id: "new-year", nameBn: "ইংরেজি নববর্ষ", nameEn: "New Year's Day", month: 1, day: 1, emoji: "🎉" },
-  { id: "republic-day", nameBn: "প্রজাতন্ত্র দিবস", nameEn: "Republic Day (India)", month: 1, day: 26, emoji: "🇮🇳" },
-  { id: "valentines-day", nameBn: "ভ্যালেন্টাইনস ডে", nameEn: "Valentine's Day", month: 2, day: 14, emoji: "❤️" },
-  { id: "may-day", nameBn: "মে দিবস", nameEn: "International Workers' Day", month: 5, day: 1, emoji: "🛠️" },
-  { id: "independence-day", nameBn: "স্বাধীনতা দিবস", nameEn: "Independence Day (India)", month: 8, day: 15, emoji: "🇮🇳" },
-  { id: "teachers-day", nameBn: "শিক্ষক দিবস", nameEn: "Teachers' Day", month: 9, day: 5, emoji: "🍎" },
-  { id: "gandhi-jayanti", nameBn: "গান্ধী জয়ন্তী", nameEn: "Gandhi Jayanti", month: 10, day: 2, emoji: "🕊️" },
-  { id: "childrens-day", nameBn: "শিশু দিবস", nameEn: "Children's Day", month: 11, day: 14, emoji: "🎈" },
-  { id: "christmas-eve", nameBn: "বড়দিনের প্রাক্কাল", nameEn: "Christmas Eve", month: 12, day: 24, emoji: "🎄" },
-  { id: "christmas", nameBn: "বড়দিন", nameEn: "Christmas", month: 12, day: 25, emoji: "🎄" },
-  { id: "new-years-eve", nameBn: "বর্ষবরণ", nameEn: "New Year's Eve", month: 12, day: 31, emoji: "🥂" },
+  { id: "new-year", nameBn: "ইংরেজি নববর্ষ", nameEn: "New Year's Day", month: 1, day: 1, emoji: "🎉", icon: "star" },
+  { id: "republic-day", nameBn: "প্রজাতন্ত্র দিবস", nameEn: "Republic Day (India)", month: 1, day: 26, emoji: "🇮🇳", icon: "flag" },
+  { id: "valentines-day", nameBn: "ভ্যালেন্টাইনস ডে", nameEn: "Valentine's Day", month: 2, day: 14, emoji: "❤️", icon: "heart" },
+  { id: "may-day", nameBn: "মে দিবস", nameEn: "International Workers' Day", month: 5, day: 1, emoji: "🛠️", icon: "gear" },
+  { id: "independence-day", nameBn: "স্বাধীনতা দিবস", nameEn: "Independence Day (India)", month: 8, day: 15, emoji: "🇮🇳", icon: "flag" },
+  { id: "teachers-day", nameBn: "শিক্ষক দিবস", nameEn: "Teachers' Day", month: 9, day: 5, emoji: "🍎", icon: "book" },
+  { id: "gandhi-jayanti", nameBn: "গান্ধী জয়ন্তী", nameEn: "Gandhi Jayanti", month: 10, day: 2, emoji: "🕊️", icon: "dove" },
+  { id: "childrens-day", nameBn: "শিশু দিবস", nameEn: "Children's Day", month: 11, day: 14, emoji: "🎈", icon: "balloon" },
+  { id: "christmas-eve", nameBn: "বড়দিনের প্রাক্কাল", nameEn: "Christmas Eve", month: 12, day: 24, emoji: "🎄", icon: "tree" },
+  { id: "christmas", nameBn: "বড়দিন", nameEn: "Christmas", month: 12, day: 25, emoji: "🎄", icon: "tree" },
+  { id: "new-years-eve", nameBn: "বর্ষবরণ", nameEn: "New Year's Eve", month: 12, day: 31, emoji: "🥂", icon: "star" },
 ];
 
 /** Meeus/Jones/Butcher algorithm for the Gregorian Easter Sunday date. */
@@ -93,7 +122,7 @@ export function gregorianEaster(year: number): CalendarDate {
 }
 
 export interface ResolvedEvent {
-  festival: Pick<Festival, "id" | "nameBn" | "nameEn" | "category" | "emoji">;
+  festival: Pick<Festival, "id" | "nameBn" | "nameEn" | "category" | "emoji" | "icon">;
   date: CalendarDate;
 }
 
@@ -130,15 +159,15 @@ export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]
 /** Resolve Gregorian-fixed holidays (including Easter-derived ones) for a Gregorian year. */
 export function resolveGregorianHolidays(gregorianYear: number): ResolvedEvent[] {
   const events: ResolvedEvent[] = GREGORIAN_HOLIDAYS.map((h) => ({
-    festival: { id: h.id, nameBn: h.nameBn, nameEn: h.nameEn, category: "other", emoji: h.emoji },
+    festival: { id: h.id, nameBn: h.nameBn, nameEn: h.nameEn, category: "other", emoji: h.emoji, icon: h.icon },
     date: { year: gregorianYear, month: h.month, day: h.day },
   }));
 
   const easter = gregorianEaster(gregorianYear);
   const goodFriday = addDays(easter, -2);
   events.push(
-    { festival: { id: "good-friday", nameBn: "গুড ফ্রাইডে", nameEn: "Good Friday", category: "other", emoji: "✝️" }, date: goodFriday },
-    { festival: { id: "easter-sunday", nameBn: "ইস্টার সানডে", nameEn: "Easter Sunday", category: "other", emoji: "🐣" }, date: easter }
+    { festival: { id: "good-friday", nameBn: "গুড ফ্রাইডে", nameEn: "Good Friday", category: "other", emoji: "✝️", icon: "cross" }, date: goodFriday },
+    { festival: { id: "easter-sunday", nameBn: "ইস্টার সানডে", nameEn: "Easter Sunday", category: "other", emoji: "🐣", icon: "egg" }, date: easter }
   );
 
   return events;
