@@ -51,12 +51,12 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
   const headers = mode === "bn" ? WEEKDAY_HEADERS_BN : WEEKDAY_HEADERS_EN;
 
   return (
-    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 p-2 sm:p-3 shadow-glow">
-      <div className="grid grid-cols-7 gap-1 mb-1.5">
+    <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 p-3 sm:p-4 shadow-glow">
+      <div className="grid grid-cols-7 gap-1.5 mb-2">
         {headers.map((h, i) => (
           <div
             key={h}
-            className={`text-center text-[11px] sm:text-xs font-bold py-1.5 bn ${
+            className={`text-center text-xs sm:text-sm font-bold py-2 bn ${
               i === 0 ? "text-[color:var(--today-ring)]" : "text-[color:var(--text-muted)]"
             }`}
           >
@@ -65,7 +65,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+      <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
         {Array.from({ length: leading }).map((_, i) => (
           <div key={`lead-${i}`} />
         ))}
@@ -83,27 +83,27 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              className={`group relative aspect-[4/5.6] sm:aspect-[4/4.2] rounded-lg sm:rounded-xl border px-1 py-1 sm:px-1.5 sm:py-1.5 flex flex-col items-start text-left transition-all
+              className={`group relative aspect-[4/4.8] sm:aspect-[4/4.2] rounded-xl sm:rounded-2xl border px-1.5 py-1.5 sm:px-2 sm:py-2 flex flex-col items-start text-left transition-all
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
             >
               <div className="flex items-baseline justify-between w-full shrink-0">
                 <span
-                  className={`text-sm sm:text-lg font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
+                  className={`text-base sm:text-xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
                     isSunday ? "text-[color:var(--today-ring)]" : ""
                   }`}
                 >
                   {primary}
                 </span>
-                <span className={`text-[9px] sm:text-[10px] text-[color:var(--text-muted)] leading-none ${mode === "bn" ? "num-en" : "bn"}`}>
+                <span className={`text-[10px] sm:text-xs text-[color:var(--text-muted)] leading-none ${mode === "bn" ? "num-en" : "bn"}`}>
                   {secondary}
                 </span>
               </div>
 
               {badge && (
                 <div
-                  className="mt-0.5 flex-1 w-full min-h-0 rounded-md sm:rounded-lg flex flex-col items-center justify-center gap-0.5 py-0.5 px-0.5 overflow-hidden"
+                  className="mt-1 flex-1 w-full min-h-0 rounded-lg sm:rounded-xl flex flex-col items-center justify-center gap-0.5 py-1 px-0.5 overflow-hidden"
                   style={{
                     backgroundColor: hexToRgba(badge.color, 0.16),
                     border: `1px solid ${hexToRgba(badge.color, 0.45)}`,
@@ -111,14 +111,14 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   title={badge.label}
                 >
                   {badge.images ? (
-                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-[16px]" />
+                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-[20px]" />
                   ) : (
-                    <span className="h-4 w-4 sm:h-6 sm:w-6 shrink-0" style={{ color: badge.color }}>
+                    <span className="h-5 w-5 sm:h-7 sm:w-7 shrink-0" style={{ color: badge.color }}>
                       <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
                     </span>
                   )}
                   <span
-                    className="text-[6.5px] sm:text-[8px] leading-tight text-center bn line-clamp-1 px-0.5 shrink-0"
+                    className="text-[7.5px] sm:text-[9px] leading-tight text-center bn line-clamp-1 px-0.5 shrink-0"
                     style={{ color: badge.color }}
                   >
                     {badge.label}
