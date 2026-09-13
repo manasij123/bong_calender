@@ -8,6 +8,8 @@ import { CalendarDate, dateKey, findBengaliMonthStart, addDays } from "./bengali
 import { DayInfo } from "./dayInfo.js";
 import { GeoLocation, KOLKATA } from "./solarTime.js";
 import { HijriDate, hijriToGregorian, gregorianToHijri } from "./hijri.js";
+import { dateToJD } from "./julian.js";
+import { getPanchang } from "./panchang.js";
 
 export type FestivalCategory = "bengali-new-year" | "puja" | "vrata" | "solar" | "other" | "islamic";
 
@@ -236,20 +238,40 @@ export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]
   // Second pass: rules anchored to another (already-resolved) festival's
   // date, searched within an offset window from it instead of by raw
   // Bengali-month index -- see the comment on the Durga Puja rules above.
+  //
+  // These specifically check the tithi a little after sunrise rather than
+  // at the exact sunrise instant used everywhere else. A tithi that begins
+  // only minutes after sunrise (as Saptami does ahead of Durga Puja in
+  // 2026 -- Shashthi->Saptami at ~6:00am, sunrise ~5:34am) is, by strict
+  // udaya-tithi, "the day's tithi" for only a few minutes' margin; popular
+  // convention and most printed panjikas instead treat that day as already
+  // the new tithi. A small buffer resolves that specific knife-edge
+  // without disturbing tithi elsewhere (verified: 30-90 minutes all give
+  // the same, stable result here).
+  const ANCHOR_TITHI_BUFFER_MIN = 45;
   for (const festival of BENGALI_FESTIVALS) {
     const rule = festival.rule;
     if (rule.kind !== "tithiNearAnchor") continue;
     const anchorIdx = resolvedIndexById.get(rule.anchorId);
     if (anchorIdx === undefined) continue;
+    let firstMatchOffset: number | undefined;
     for (let offset = rule.minOffsetDays; offset <= rule.maxOffsetDays; offset++) {
       const day = yearDays[anchorIdx + offset];
       if (!day) break;
-      if (day.panchang.tithi.paksha === rule.paksha && day.panchang.tithi.index === rule.tithiIndex) {
+      const refTime = new Date(day.sunTimes.sunriseLocal.getTime() + ANCHOR_TITHI_BUFFER_MIN * 60000);
+      const tithi = getPanchang(dateToJD(refTime)).tithi;
+      const matches = tithi.paksha === rule.paksha && tithi.index === rule.tithiIndex;
+      if (matches) {
+        // A tithi can span two consecutive sunrises (as Saptami does ahead
+        // of Durga Puja in 2026) -- record every day it's the prevailing
+        // tithi, not just the first, so both days show the occasion.
         events.push({ festival, date: day.gregorian });
-        resolvedIndexById.set(festival.id, anchorIdx + offset);
-        break;
+        firstMatchOffset ??= offset;
+      } else if (firstMatchOffset !== undefined) {
+        break; // past the (1-2 day) run that matched
       }
     }
+    if (firstMatchOffset !== undefined) resolvedIndexById.set(festival.id, anchorIdx + firstMatchOffset);
   }
 
   return events;
