@@ -63,20 +63,34 @@ const SUN_MANDA_MAX_DEG = 2 + 10 / 60 + 31 / 3600;
  * Sun's classical sidereal apogee (mandocca), a small additive sidereal
  * zero-point term (absorbing the Kali-epoch JD's inherent sub-day
  * rounding uncertainty), and the Moon's effective manda maximum -- all
- * three solved for (not guessed) by fitting this model to the two
- * independently-confirmed 2026 sankranti dates above, then checked
- * out-of-sample against the four tithi-based dates. The fitted apogee
- * (60 deg) lands well off the ~77 deg most secondary sources quote for
- * the *original* Surya Siddhanta epoch -- expected, since real Bengali
- * panjika-makers have long applied their own "bija" (correction) offsets
- * to keep the classical parameters tracking the sky, and because a
- * fixed (non-precessing) solar apogee itself accumulates several degrees
- * of drift over the ~1600 years since the text's own epoch. Fitting
- * directly to real, current panjika output is the more reliable target
- * than an assumed multi-century-stale ancient constant.
+ * three solved for (not guessed), by a least-squares fit of the two free
+ * solar parameters (apogee, zero-point) against three independently-
+ * confirmed 2026 sankranti dates: Poila Boishakh = 15 April, Bhadra 1 =
+ * 19 August, and Ashwin 1 = 19 September (this last one specifically
+ * from the Benimadhab Sil Full Panjika, which puts Vishwakarma Puja --
+ * the last day of Bhadra -- on 18 September; the "Bisuddha Siddhanta"
+ * modern-computation panjika puts the same puja a day earlier, on the
+ * 17th, which is what the "drik" system in this file's sibling
+ * computation independently reproduces). Two parameters can't exactly
+ * satisfy three point constraints from a single-sinusoid model, so this
+ * is a best fit, not an exact one -- checked out-of-sample against the
+ * four tithi-based dates below (still exact) and against Makar Sankranti
+ * (this model gives 15 January 2026, one day off the commonly-quoted 14
+ * January -- an already-accepted trade-off, since no single global
+ * correction fits every sankranti of the year exactly).
+ *
+ * The fitted apogee (60 deg) lands well off the ~77 deg most secondary
+ * sources quote for the *original* Surya Siddhanta epoch -- expected,
+ * since real Bengali panjika-makers have long applied their own "bija"
+ * (correction) offsets to keep the classical parameters tracking the
+ * sky, and because a fixed (non-precessing) solar apogee itself
+ * accumulates several degrees of drift over the ~1600 years since the
+ * text's own epoch. Fitting directly to real, current panjika output is
+ * the more reliable target than an assumed multi-century-stale ancient
+ * constant.
  */
-const SUN_APOGEE_DEG = 60;
-const SIDEREAL_ZERO_OFFSET_DEG = -0.3;
+const SUN_APOGEE_DEG = 60.249;
+const SIDEREAL_ZERO_OFFSET_DEG = -0.593;
 const MOON_MANDA_MAX_DEG = 4.85;
 
 function ahargana(jd: number): number {
