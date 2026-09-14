@@ -24,7 +24,7 @@ export function hexToRgba(hex: string, alpha: number): string {
 }
 
 /** A darker, fully-opaque version of a badge color, for a solid chip behind artwork. */
-export function deepenColor(hex: string, factor = 0.5): string {
+export function deepenColor(hex: string, factor = 0.7): string {
   const clean = hex.replace("#", "");
   const toHex = (n: number) => Math.round(n).toString(16).padStart(2, "0");
   const r = parseInt(clean.substring(0, 2), 16) * factor;
