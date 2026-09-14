@@ -6,6 +6,7 @@ interface HeaderProps {
   theme: "dark" | "light";
   onThemeToggle: () => void;
   onOpenSearch: () => void;
+  onOpenShuvoKarmo: () => void;
   system: PanchangSystem;
   onSystemChange: (system: PanchangSystem) => void;
 }
@@ -16,6 +17,7 @@ export default function Header({
   theme,
   onThemeToggle,
   onOpenSearch,
+  onOpenShuvoKarmo,
   system,
   onSystemChange,
 }: HeaderProps) {
@@ -51,6 +53,14 @@ export default function Header({
               English
             </button>
           </div>
+          <button
+            onClick={onOpenShuvoKarmo}
+            aria-label="Shuvo Karmo"
+            title="শুভ কাজের দিন (বিবাহ/অন্নপ্রাশন/গৃহপ্রবেশ)"
+            className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
+          >
+            💍
+          </button>
           <button
             onClick={onOpenSearch}
             aria-label="Search"

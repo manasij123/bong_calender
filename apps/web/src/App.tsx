@@ -21,6 +21,7 @@ import DayDetailPanel from "./components/DayDetailPanel";
 import EventAgenda from "./components/EventAgenda";
 import MobileSlideDrawer from "./components/MobileSlideDrawer";
 import SearchOverlay from "./components/SearchOverlay";
+import ShuvoKarmoOverlay from "./components/ShuvoKarmoOverlay";
 
 type Mode = "bn" | "en";
 type Theme = "dark" | "light";
@@ -71,6 +72,7 @@ export default function App() {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
   const [mobileAgendaOpen, setMobileAgendaOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [shuvoKarmoOpen, setShuvoKarmoOpen] = useState(false);
 
   const cells = useMemo<DayCell[]>(() => {
     return mode === "bn"
@@ -203,6 +205,7 @@ export default function App() {
         theme={theme}
         onThemeToggle={toggleTheme}
         onOpenSearch={() => setSearchOpen(true)}
+        onOpenShuvoKarmo={() => setShuvoKarmoOpen(true)}
         system={system}
         onSystemChange={setSystem}
       />
@@ -250,6 +253,15 @@ export default function App() {
         mode={mode}
         system={system}
         onSelectDate={handleSearchSelectDate}
+      />
+
+      <ShuvoKarmoOverlay
+        open={shuvoKarmoOpen}
+        onClose={() => setShuvoKarmoOpen(false)}
+        mode={mode}
+        cells={cells}
+        loc={KOLKATA}
+        system={system}
       />
 
       <footer className="mx-auto max-w-6xl px-5 pt-6 text-center text-[11px] text-[color:var(--text-muted)] bn">

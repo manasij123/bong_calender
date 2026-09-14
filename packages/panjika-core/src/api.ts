@@ -2,7 +2,7 @@
 // conversion, panchang, and festival/holiday data together into what a UI
 // actually needs: month grids annotated with everything relevant per day.
 
-import { CalendarDate, dateKey, getGregorianMonthDates } from "./bengaliCalendar.js";
+import { CalendarDate, dateKey, getGregorianMonthDates, toBengaliDate } from "./bengaliCalendar.js";
 import { getBengaliMonthDates } from "./bengaliCalendar.js";
 import { computeDayInfo, computeBengaliYearDays, DayInfo } from "./dayInfo.js";
 import {
@@ -13,6 +13,7 @@ import {
 } from "./festivals.js";
 import { GeoLocation, KOLKATA } from "./solarTime.js";
 import { getKalamWindows, getAuspiciousHints } from "./muhurat.js";
+import { getShuvoKarmoForYear, ShuvoKarmoResult } from "./shuvoKarmo.js";
 import { PanchangSystem } from "./suryaSiddhanta.js";
 
 const DEFAULT_SYSTEM: PanchangSystem = "surya-siddhanta";
@@ -20,6 +21,7 @@ const DEFAULT_SYSTEM: PanchangSystem = "surya-siddhanta";
 const dayInfoCache = new Map<string, DayInfo>();
 const yearDaysCache = new Map<string, DayInfo[]>();
 const eventIndexCache = new Map<string, Map<string, ResolvedEvent[]>>();
+const shuvoKarmoCache = new Map<string, Map<string, ShuvoKarmoResult>>();
 
 function locKey(loc: GeoLocation): string {
   return `${loc.latitudeDeg},${loc.longitudeDeg},${loc.timezoneOffsetHours}`;
@@ -144,6 +146,42 @@ export function getBengaliMonthGrid(
     info: getDayInfoCached(date, loc, system),
     events: getEventsForDate(date, loc, system),
   }));
+}
+
+function getShuvoKarmoForBengaliYearCached(
+  bengaliYear: number,
+  loc: GeoLocation,
+  system: PanchangSystem
+): Map<string, ShuvoKarmoResult> {
+  const key = `${bengaliYear}|${locKey(loc)}|${system}`;
+  let m = shuvoKarmoCache.get(key);
+  if (!m) {
+    m = getShuvoKarmoForYear(getBengaliYearDaysCached(bengaliYear, loc, system));
+    shuvoKarmoCache.set(key, m);
+  }
+  return m;
+}
+
+/**
+ * Shuvo-karmo (auspicious ceremony) flags for a set of dates, e.g. the
+ * dates currently shown in a month grid. Merges across however many
+ * distinct Bengali years the dates span (usually one, sometimes two near
+ * a Poila Boishakh boundary).
+ */
+export function getShuvoKarmoForDates(
+  dates: CalendarDate[],
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): Map<string, ShuvoKarmoResult> {
+  const bengaliYears = new Set<number>();
+  for (const d of dates) bengaliYears.add(toBengaliDate(d, loc, system).year);
+
+  const merged = new Map<string, ShuvoKarmoResult>();
+  for (const by of bengaliYears) {
+    const m = getShuvoKarmoForBengaliYearCached(by, loc, system);
+    for (const [k, v] of m) merged.set(k, v);
+  }
+  return merged;
 }
 
 export { KOLKATA };

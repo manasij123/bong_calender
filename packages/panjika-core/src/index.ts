@@ -11,4 +11,5 @@ export * from "./dayInfo.js";
 export * from "./festivals.js";
 export * from "./hijri.js";
 export * from "./muhurat.js";
+export * from "./shuvoKarmo.js";
 export * from "./api.js";
