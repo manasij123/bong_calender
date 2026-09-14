@@ -2,7 +2,7 @@ import { DayCell, dateKey, toBengaliNumber } from "@bong/panjika-core";
 import FestivalIconGlyph, { IconKey } from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
 import MarqueeText from "./MarqueeText";
-import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgba } from "../lib/festivalColor";
+import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgba, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
 const WEEKDAY_HEADERS_BN = ["র", "সো", "ম", "বু", "বৃ", "শু", "শ"];
@@ -110,7 +110,15 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
               {badge ? (
                 <div className="flex-1 min-h-0 w-full flex flex-col items-center justify-center gap-0.5 pb-1.5 px-1" title={badge.label}>
                   {badge.images ? (
-                    <CyclingImage images={badge.images} alt={badge.label} className="flex-1 w-full min-h-0" />
+                    <div
+                      className="flex-1 w-full min-h-0 rounded-lg sm:rounded-xl p-1"
+                      style={{
+                        backgroundColor: deepenColor(badge.color),
+                        ["--festival-art-tint" as string]: "#000000",
+                      }}
+                    >
+                      <CyclingImage images={badge.images} alt={badge.label} className="h-full w-full" />
+                    </div>
                   ) : (
                     <span className="h-7 w-7 sm:h-9 sm:w-9 shrink-0" style={{ color: badge.color }}>
                       <FestivalIconGlyph icon={badge.icon} className="h-full w-full" />
