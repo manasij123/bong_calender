@@ -1,12 +1,24 @@
+import { PanchangSystem } from "@bong/panjika-core";
+
 interface HeaderProps {
   mode: "bn" | "en";
   onModeChange: (mode: "bn" | "en") => void;
   theme: "dark" | "light";
   onThemeToggle: () => void;
   onOpenSearch: () => void;
+  system: PanchangSystem;
+  onSystemChange: (system: PanchangSystem) => void;
 }
 
-export default function Header({ mode, onModeChange, theme, onThemeToggle, onOpenSearch }: HeaderProps) {
+export default function Header({
+  mode,
+  onModeChange,
+  theme,
+  onThemeToggle,
+  onOpenSearch,
+  system,
+  onSystemChange,
+}: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-[color:var(--bg-elevated)] border-b border-[color:var(--border)]">
       <div className="mx-auto max-w-6xl px-2 sm:px-5 py-3 flex items-center justify-between gap-1.5 sm:gap-3">
@@ -53,6 +65,34 @@ export default function Header({ mode, onModeChange, theme, onThemeToggle, onOpe
           >
             {theme === "dark" ? "☀️" : "🌙"}
           </button>
+        </div>
+      </div>
+
+      <div className="border-t border-[color:var(--border)] bg-[color:var(--bg-soft)]/40">
+        <div className="mx-auto max-w-6xl px-2 sm:px-5 py-1.5 flex items-center justify-center gap-2">
+          <span className="hidden sm:inline text-[11px] text-[color:var(--text-muted)] bn shrink-0">
+            পঞ্জিকা রীতি
+          </span>
+          <div className="flex rounded-full border border-[color:var(--border)] p-0.5 text-[11px] font-semibold">
+            <button
+              onClick={() => onSystemChange("surya-siddhanta")}
+              title="সূর্যসিদ্ধান্ত (ঐতিহ্যগত পঞ্জিকা)"
+              className={`px-2.5 py-1 rounded-full transition-colors bn ${
+                system === "surya-siddhanta" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
+              }`}
+            >
+              ঐতিহ্যগত
+            </button>
+            <button
+              onClick={() => onSystemChange("drik")}
+              title="দৃকসিদ্ধান্ত (আধুনিক জ্যোতির্বৈজ্ঞানিক পঞ্জিকা)"
+              className={`px-2.5 py-1 rounded-full transition-colors bn ${
+                system === "drik" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
+              }`}
+            >
+              আধুনিক
+            </button>
+          </div>
         </div>
       </div>
     </header>

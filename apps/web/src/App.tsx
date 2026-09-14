@@ -3,6 +3,7 @@ import {
   CalendarDate,
   DayCell,
   KOLKATA,
+  PanchangSystem,
   dateKey,
   getBengaliMonthGrid,
   getDayDetail,
@@ -41,10 +42,24 @@ function useTheme(): [Theme, () => void] {
   return [theme, () => setTheme((t) => (t === "dark" ? "light" : "dark"))];
 }
 
+function useSystem(): [PanchangSystem, (s: PanchangSystem) => void] {
+  const [system, setSystem] = useState<PanchangSystem>(() => {
+    const stored = typeof window !== "undefined" ? window.localStorage.getItem("panjika-system") : null;
+    return stored === "drik" || stored === "surya-siddhanta" ? stored : "surya-siddhanta";
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem("panjika-system", system);
+  }, [system]);
+
+  return [system, setSystem];
+}
+
 export default function App() {
   const [theme, toggleTheme] = useTheme();
+  const [system, setSystem] = useSystem();
   const t = useMemo(() => today(), []);
-  const tb = useMemo(() => toBengaliDate(t), [t]);
+  const tb = useMemo(() => toBengaliDate(t, KOLKATA, system), [t, system]);
   const todayKey = dateKey(t);
 
   const [mode, setMode] = useState<Mode>("bn");
@@ -59,11 +74,21 @@ export default function App() {
 
   const cells = useMemo<DayCell[]>(() => {
     return mode === "bn"
-      ? getBengaliMonthGrid(bengaliYear, bengaliMonthIndex, KOLKATA)
-      : getGregorianMonthGrid(gregorianYear, gregorianMonth, KOLKATA);
-  }, [mode, bengaliYear, bengaliMonthIndex, gregorianYear, gregorianMonth]);
+      ? getBengaliMonthGrid(bengaliYear, bengaliMonthIndex, KOLKATA, system)
+      : getGregorianMonthGrid(gregorianYear, gregorianMonth, KOLKATA, system);
+  }, [mode, bengaliYear, bengaliMonthIndex, gregorianYear, gregorianMonth, system]);
 
-  const selectedDetail = useMemo(() => getDayDetail(selectedDate, KOLKATA), [selectedDate]);
+  const selectedDetail = useMemo(() => getDayDetail(selectedDate, KOLKATA, system), [selectedDate, system]);
+
+  // Bengali month boundaries differ between systems, so re-derive the
+  // Bengali-mode view (year/month) for whichever date is currently selected
+  // whenever the system toggle changes, instead of leaving it stale.
+  useEffect(() => {
+    if (mode !== "bn") return;
+    const bd = toBengaliDate(selectedDate, KOLKATA, system);
+    setBengaliYear(bd.year);
+    setBengaliMonthIndex(bd.monthIndex);
+  }, [system]);
 
   function handleModeChange(next: Mode) {
     if (next === mode) return;
@@ -71,7 +96,7 @@ export default function App() {
       setGregorianYear(selectedDate.year);
       setGregorianMonth(selectedDate.month);
     } else {
-      const bd = toBengaliDate(selectedDate, KOLKATA);
+      const bd = toBengaliDate(selectedDate, KOLKATA, system);
       setBengaliYear(bd.year);
       setBengaliMonthIndex(bd.monthIndex);
     }
@@ -135,7 +160,7 @@ export default function App() {
 
   function handleSearchSelectDate(date: CalendarDate) {
     if (mode === "bn") {
-      const bd = toBengaliDate(date, KOLKATA);
+      const bd = toBengaliDate(date, KOLKATA, system);
       setBengaliYear(bd.year);
       setBengaliMonthIndex(bd.monthIndex);
     } else {
@@ -178,6 +203,8 @@ export default function App() {
         theme={theme}
         onThemeToggle={toggleTheme}
         onOpenSearch={() => setSearchOpen(true)}
+        system={system}
+        onSystemChange={setSystem}
       />
 
       <main className="mx-auto max-w-6xl px-3 sm:px-5 pt-3 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 items-start">
@@ -205,12 +232,12 @@ export default function App() {
         </div>
 
         <div className="hidden lg:block sticky top-20">
-          <DayDetailPanel detail={selectedDetail} mode={mode} />
+          <DayDetailPanel detail={selectedDetail} mode={mode} system={system} />
         </div>
       </main>
 
       <MobileSlideDrawer open={mobileDrawerOpen} onClose={() => setMobileDrawerOpen(false)} closeLabel="বন্ধ করুন">
-        <DayDetailPanel detail={selectedDetail} mode={mode} />
+        <DayDetailPanel detail={selectedDetail} mode={mode} system={system} />
       </MobileSlideDrawer>
 
       <MobileSlideDrawer open={mobileAgendaOpen} onClose={() => setMobileAgendaOpen(false)} closeLabel="বন্ধ করুন">
@@ -221,6 +248,7 @@ export default function App() {
         open={searchOpen}
         onClose={() => setSearchOpen(false)}
         mode={mode}
+        system={system}
         onSelectDate={handleSearchSelectDate}
       />
 

@@ -1,5 +1,6 @@
 import {
   CalendarDate,
+  PanchangSystem,
   ResolvedEvent,
   getFestivalEventsForYear,
   toBengaliDate,
@@ -156,7 +157,7 @@ function matchMonthName(word: string, names: string[]): number {
 }
 
 /** Best-effort parse of a typed date (numeric, "15 August", or a Bengali month name + day). */
-export function parseDateQuery(query: string): CalendarDate[] {
+export function parseDateQuery(query: string, system: PanchangSystem = "surya-siddhanta"): CalendarDate[] {
   const raw = toLatinDigits(query).trim();
   if (!raw) return [];
   const t = today();
@@ -191,10 +192,10 @@ export function parseDateQuery(query: string): CalendarDate[] {
       }
       const bnIdx = BENGALI_RANGE.test(word) ? BENGALI_MONTH_NAMES.findIndex((n) => n === word) : -1;
       if (bnIdx >= 0) {
-        const tb = toBengaliDate(t, KOLKATA);
+        const tb = toBengaliDate(t, KOLKATA, system);
         for (const by of [tb.year, tb.year + 1, tb.year - 1]) {
           try {
-            const start = findBengaliMonthStart(by, bnIdx, KOLKATA);
+            const start = findBengaliMonthStart(by, bnIdx, KOLKATA, system);
             results.push(addDays(start, day - 1));
           } catch {
             // ignore out-of-range attempts
@@ -218,10 +219,15 @@ export interface FestivalSearchEntry {
 }
 
 /** Build (and cache) a searchable index of festival occurrences across a span of years around `centerYear`. */
-export function buildFestivalSearchIndex(centerYear: number, yearsBack = 1, yearsForward = 3): FestivalSearchEntry[] {
+export function buildFestivalSearchIndex(
+  centerYear: number,
+  system: PanchangSystem = "surya-siddhanta",
+  yearsBack = 1,
+  yearsForward = 3
+): FestivalSearchEntry[] {
   const byId = new Map<string, FestivalSearchEntry>();
   for (let y = centerYear - yearsBack; y <= centerYear + yearsForward; y++) {
-    const events: ResolvedEvent[] = getFestivalEventsForYear(y, KOLKATA);
+    const events: ResolvedEvent[] = getFestivalEventsForYear(y, KOLKATA, system);
     for (const e of events) {
       let entry = byId.get(e.festival.id);
       if (!entry) {
@@ -250,8 +256,8 @@ function nearestOccurrence(dates: CalendarDate[]): CalendarDate {
   return future ?? dates[dates.length - 1];
 }
 
-function bengaliDateLabel(date: CalendarDate): string {
-  const bd = toBengaliDate(date, KOLKATA);
+function bengaliDateLabel(date: CalendarDate, system: PanchangSystem): string {
+  const bd = toBengaliDate(date, KOLKATA, system);
   return `${BENGALI_MONTH_NAMES[bd.monthIndex]} ${toBengaliNumber(bd.day)}, ${toBengaliNumber(bd.year)}`;
 }
 
@@ -260,8 +266,12 @@ function englishDateLabel(date: CalendarDate): string {
 }
 
 /** "১ বৈশাখ, ১৪৩৩" or "15 August 2026", plus the other calendar's date as a subtitle. */
-function formatDateLabels(date: CalendarDate, mode: "bn" | "en"): { primary: string; secondary: string } {
-  const bnLabel = bengaliDateLabel(date);
+function formatDateLabels(
+  date: CalendarDate,
+  mode: "bn" | "en",
+  system: PanchangSystem
+): { primary: string; secondary: string } {
+  const bnLabel = bengaliDateLabel(date, system);
   const enLabel = englishDateLabel(date);
   return mode === "bn" ? { primary: bnLabel, secondary: enLabel } : { primary: enLabel, secondary: bnLabel };
 }
@@ -270,6 +280,7 @@ export function searchFestivals(
   query: string,
   index: FestivalSearchEntry[],
   mode: "bn" | "en",
+  system: PanchangSystem = "surya-siddhanta",
   limit = 8
 ): SearchResult[] {
   const q = query.trim();
@@ -278,11 +289,11 @@ export function searchFestivals(
   const results: SearchResult[] = [];
   const seenKeys = new Set<string>();
 
-  for (const d of parseDateQuery(q)) {
+  for (const d of parseDateQuery(q, system)) {
     const key = dateKey(d);
     if (seenKeys.has(key)) continue;
     seenKeys.add(key);
-    results.push({ kind: "date", date: d, ...formatDateLabels(d, mode) });
+    results.push({ kind: "date", date: d, ...formatDateLabels(d, mode, system) });
     if (results.length >= 2) break;
   }
 
@@ -295,7 +306,7 @@ export function searchFestivals(
         kind: "festival",
         date,
         primary: mode === "bn" ? entry.nameBn : entry.nameEn,
-        secondary: mode === "bn" ? bengaliDateLabel(date) : englishDateLabel(date),
+        secondary: mode === "bn" ? bengaliDateLabel(date, system) : englishDateLabel(date),
       });
     }
   }

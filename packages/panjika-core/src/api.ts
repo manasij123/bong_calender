@@ -13,6 +13,9 @@ import {
 } from "./festivals.js";
 import { GeoLocation, KOLKATA } from "./solarTime.js";
 import { getKalamWindows, getAuspiciousHints } from "./muhurat.js";
+import { PanchangSystem } from "./suryaSiddhanta.js";
+
+const DEFAULT_SYSTEM: PanchangSystem = "surya-siddhanta";
 
 const dayInfoCache = new Map<string, DayInfo>();
 const yearDaysCache = new Map<string, DayInfo[]>();
@@ -22,24 +25,32 @@ function locKey(loc: GeoLocation): string {
   return `${loc.latitudeDeg},${loc.longitudeDeg},${loc.timezoneOffsetHours}`;
 }
 
-export function getDayInfoCached(date: CalendarDate, loc: GeoLocation = KOLKATA): DayInfo {
-  const key = `${dateKey(date)}|${locKey(loc)}`;
+export function getDayInfoCached(
+  date: CalendarDate,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): DayInfo {
+  const key = `${dateKey(date)}|${locKey(loc)}|${system}`;
   let info = dayInfoCache.get(key);
   if (!info) {
-    info = computeDayInfo(date, loc);
+    info = computeDayInfo(date, loc, system);
     dayInfoCache.set(key, info);
   }
   return info;
 }
 
-export function getBengaliYearDaysCached(bengaliYear: number, loc: GeoLocation = KOLKATA): DayInfo[] {
-  const key = `${bengaliYear}|${locKey(loc)}`;
+export function getBengaliYearDaysCached(
+  bengaliYear: number,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): DayInfo[] {
+  const key = `${bengaliYear}|${locKey(loc)}|${system}`;
   let days = yearDaysCache.get(key);
   if (!days) {
-    days = computeBengaliYearDays(bengaliYear, loc);
+    days = computeBengaliYearDays(bengaliYear, loc, system);
     yearDaysCache.set(key, days);
     for (const d of days) {
-      dayInfoCache.set(`${dateKey(d.gregorian)}|${locKey(loc)}`, d);
+      dayInfoCache.set(`${dateKey(d.gregorian)}|${locKey(loc)}|${system}`, d);
     }
   }
   return days;
@@ -47,12 +58,18 @@ export function getBengaliYearDaysCached(bengaliYear: number, loc: GeoLocation =
 
 function getGregorianYearEventIndexCached(
   gregorianYear: number,
-  loc: GeoLocation
+  loc: GeoLocation,
+  system: PanchangSystem = DEFAULT_SYSTEM
 ): Map<string, ResolvedEvent[]> {
-  const key = `${gregorianYear}|${locKey(loc)}`;
+  const key = `${gregorianYear}|${locKey(loc)}|${system}`;
   let idx = eventIndexCache.get(key);
   if (!idx) {
-    idx = getEventIndexForGregorianYear(gregorianYear, (by) => getBengaliYearDaysCached(by, loc), loc);
+    idx = getEventIndexForGregorianYear(
+      gregorianYear,
+      (by) => getBengaliYearDaysCached(by, loc, system),
+      loc,
+      system
+    );
     eventIndexCache.set(key, idx);
   }
   return idx;
@@ -70,20 +87,32 @@ export interface DayDetail extends DayCell {
   auspicious: ReturnType<typeof getAuspiciousHints>;
 }
 
-export function getEventsForDate(date: CalendarDate, loc: GeoLocation = KOLKATA): ResolvedEvent[] {
-  const idx = getGregorianYearEventIndexCached(date.year, loc);
+export function getEventsForDate(
+  date: CalendarDate,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): ResolvedEvent[] {
+  const idx = getGregorianYearEventIndexCached(date.year, loc, system);
   return idx.get(dateKey(date)) ?? [];
 }
 
 /** Every festival/holiday occurrence within a Gregorian year, for building a search index. */
-export function getFestivalEventsForYear(gregorianYear: number, loc: GeoLocation = KOLKATA): ResolvedEvent[] {
-  const idx = getGregorianYearEventIndexCached(gregorianYear, loc);
+export function getFestivalEventsForYear(
+  gregorianYear: number,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): ResolvedEvent[] {
+  const idx = getGregorianYearEventIndexCached(gregorianYear, loc, system);
   return Array.from(idx.values()).flat();
 }
 
-export function getDayDetail(date: CalendarDate, loc: GeoLocation = KOLKATA): DayDetail {
-  const info = getDayInfoCached(date, loc);
-  const events = getEventsForDate(date, loc);
+export function getDayDetail(
+  date: CalendarDate,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
+): DayDetail {
+  const info = getDayInfoCached(date, loc, system);
+  const events = getEventsForDate(date, loc, system);
   const kalam = getKalamWindows(info.sunTimes, info.bengali.weekday);
   const auspicious = getAuspiciousHints(info.panchang.tithi);
   return { date, info, events, kalam, auspicious };
@@ -93,12 +122,13 @@ export function getDayDetail(date: CalendarDate, loc: GeoLocation = KOLKATA): Da
 export function getGregorianMonthGrid(
   year: number,
   month: number,
-  loc: GeoLocation = KOLKATA
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
 ): DayCell[] {
   return getGregorianMonthDates(year, month).map((date) => ({
     date,
-    info: getDayInfoCached(date, loc),
-    events: getEventsForDate(date, loc),
+    info: getDayInfoCached(date, loc, system),
+    events: getEventsForDate(date, loc, system),
   }));
 }
 
@@ -106,12 +136,13 @@ export function getGregorianMonthGrid(
 export function getBengaliMonthGrid(
   bengaliYear: number,
   monthIndex: number,
-  loc: GeoLocation = KOLKATA
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = DEFAULT_SYSTEM
 ): DayCell[] {
-  return getBengaliMonthDates(bengaliYear, monthIndex, loc).map((date) => ({
+  return getBengaliMonthDates(bengaliYear, monthIndex, loc, system).map((date) => ({
     date,
-    info: getDayInfoCached(date, loc),
-    events: getEventsForDate(date, loc),
+    info: getDayInfoCached(date, loc, system),
+    events: getEventsForDate(date, loc, system),
   }));
 }
 

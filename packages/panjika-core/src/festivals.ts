@@ -10,6 +10,7 @@ import { GeoLocation, KOLKATA } from "./solarTime.js";
 import { HijriDate, hijriToGregorian, gregorianToHijri } from "./hijri.js";
 import { dateToJD } from "./julian.js";
 import { getPanchang } from "./panchang.js";
+import { PanchangSystem } from "./suryaSiddhanta.js";
 
 export type FestivalCategory = "bengali-new-year" | "puja" | "vrata" | "solar" | "other" | "islamic";
 
@@ -215,7 +216,11 @@ export interface ResolvedEvent {
  * Resolve every rule-based Bengali festival that falls within a Bengali
  * year, using a precomputed array of that year's per-day panchang.
  */
-export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]): ResolvedEvent[] {
+export function resolveBengaliFestivals(
+  bengaliYear: number,
+  yearDays: DayInfo[],
+  system: PanchangSystem = "surya-siddhanta"
+): ResolvedEvent[] {
   const events: ResolvedEvent[] = [];
   const resolvedIndexById = new Map<string, number>();
 
@@ -256,15 +261,17 @@ export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]
   // Bengali-month index -- see the comment on the Durga Puja rules above.
   //
   // These specifically check the tithi a little after sunrise rather than
-  // at the exact sunrise instant used everywhere else. A tithi that begins
-  // only minutes after sunrise (as Saptami does ahead of Durga Puja in
-  // 2026 -- Shashthi->Saptami at ~6:00am, sunrise ~5:34am) is, by strict
-  // udaya-tithi, "the day's tithi" for only a few minutes' margin; popular
-  // convention and most printed panjikas instead treat that day as already
-  // the new tithi. A small buffer resolves that specific knife-edge
-  // without disturbing tithi elsewhere (verified: 30-90 minutes all give
-  // the same, stable result here).
-  const ANCHOR_TITHI_BUFFER_MIN = 45;
+  // at the exact sunrise instant used everywhere else, so that a tithi
+  // beginning shortly after one day's sunrise but comfortably before the
+  // next day's is still credited to both days (matching how printed
+  // panjikas -- and, in 2026, real transitions -- treat the Maha Saptami
+  // window ahead of Durga Puja). The two systems' own transition timings
+  // differ, so each gets its own buffer, tuned against a wide, stable
+  // window of buffer values that all give the same result (drik:
+  // 30-90 minutes; surya-siddhanta: 200-320 minutes, since its classical
+  // single-epicycle Moon model places the same transition several hours
+  // later relative to sunrise).
+  const ANCHOR_TITHI_BUFFER_MIN = system === "surya-siddhanta" ? 240 : 45;
   for (const festival of BENGALI_FESTIVALS) {
     const rule = festival.rule;
     if (rule.kind !== "tithiNearAnchor") continue;
@@ -275,7 +282,7 @@ export function resolveBengaliFestivals(bengaliYear: number, yearDays: DayInfo[]
       const day = yearDays[anchorIdx + offset];
       if (!day) break;
       const refTime = new Date(day.sunTimes.sunriseLocal.getTime() + ANCHOR_TITHI_BUFFER_MIN * 60000);
-      const tithi = getPanchang(dateToJD(refTime)).tithi;
+      const tithi = getPanchang(dateToJD(refTime), system).tithi;
       const matches = tithi.paksha === rule.paksha && tithi.index === rule.tithiIndex;
       if (matches) {
         // A tithi can span two consecutive sunrises (as Saptami does ahead
@@ -330,13 +337,14 @@ export function buildEventIndex(events: ResolvedEvent[]): Map<string, ResolvedEv
 export function getEventIndexForGregorianYear(
   gregorianYear: number,
   bengaliYearDaysProvider: (bengaliYear: number) => DayInfo[],
-  _loc: GeoLocation = KOLKATA
+  _loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = "surya-siddhanta"
 ): Map<string, ResolvedEvent[]> {
   const bengaliYearsToScan = [gregorianYear - 594, gregorianYear - 593];
   const events: ResolvedEvent[] = [];
   for (const by of bengaliYearsToScan) {
     const days = bengaliYearDaysProvider(by);
-    events.push(...resolveBengaliFestivals(by, days));
+    events.push(...resolveBengaliFestivals(by, days, system));
   }
   events.push(...resolveGregorianHolidays(gregorianYear));
   events.push(...resolveIslamicHolidays(gregorianYear));

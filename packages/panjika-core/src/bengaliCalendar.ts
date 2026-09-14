@@ -6,44 +6,32 @@
 // rashi) happens before or after that day's sunset at the reference city
 // -- the same convention used by printed West Bengal panjikas.
 
-import { dateToJD, jdToJDE, jdeCentury, rad2deg } from "./julian.js";
-import { sunMeanLongitude, sunTrueLongitude, sunApparentLongitude } from "./sun.js";
+import { dateToJD, rad2deg } from "./julian.js";
+import { jdToJDE, jdeCentury } from "./julian.js";
+import { sunApparentLongitude } from "./sun.js";
 import { lahiriAyanamsaDeg } from "./ayanamsa.js";
 import { getSunTimes, GeoLocation, KOLKATA } from "./solarTime.js";
 import { pMod } from "./julian.js";
 import { BENGALI_MONTH_NAMES, BENGALI_WEEKDAY_NAMES } from "./numerals.js";
+import {
+  PanchangSystem,
+  suryaSiddhantaSunSiderealLongitudeDeg,
+} from "./suryaSiddhanta.js";
 
-// Printed West Bengal panjikas (Gupta Press / P.M. Bagchi style) run their
-// sankranti (month-turnover) dates about 1-2 days later than a precise
-// modern ephemeris -- verified against 2026 reference dates from multiple
-// published Bengali calendars: Poila Boishakh = 15 April 2026, Bhadra 1 =
-// 19 August 2026 (both a day or two after what plain Lahiri + modern solar
-// theory gives). This matches the well-documented Driksiddhanta vs.
-// Odriksiddhanta split in Bengali panjika-making: most popular panjikas
-// still follow classical Surya Siddhanta solar parameters rather than a
-// precise modern one. Rather than reimplementing the full classical
-// Siddhanta from its ancient epoch, we approximate the same practical
-// effect with two small, calibrated adjustments to the modern calculation:
-//  - a larger equation-of-center, matching Surya Siddhanta's classical
-//    solar apsis correction (2 deg 10' 32") vs the modern ~1 deg 55'.
-//  - a small additional ayanamsa offset.
-// This is used only for month/day-of-month placement -- tithi/nakshatra
-// elsewhere keep the precise modern calculation.
-const TRADITIONAL_EQUATION_SCALE = (2 + 10 / 60 + 32 / 3600) / 1.914602;
-const TRADITIONAL_AYANAMSA_OFFSET_DEG = 1.5;
+// Bengali solar months turn over when the Sun crosses into the next rashi
+// (sidereal sign) -- but "the Sun's sidereal longitude" isn't a single
+// number: printed West Bengal panjikas (Gupta Press / P.M. Bagchi /
+// Benimadhab Seal Directory lineage) still follow the classical Surya
+// Siddhanta mean-motion model (see suryaSiddhanta.ts), which runs
+// sankranti dates about 1-2 days later than a precise modern ("Drik")
+// ephemeris. Both are offered here as a user-facing toggle.
 
-/** Sun's sidereal longitude, adjusted to match traditional West Bengal panjika sankranti dates. */
-function traditionalSiderealSunLongitudeDeg(jd: number): number {
+/** Sun's sidereal longitude under the given panchang system. */
+function siderealSunLongitudeDeg(jd: number, system: PanchangSystem): number {
+  if (system === "surya-siddhanta") return suryaSiddhantaSunSiderealLongitudeDeg(jd);
   const T = jdeCentury(jdToJDE(jd));
-  const meanDeg = pMod(rad2deg(sunMeanLongitude(T)), 360);
-  const trueDeg = pMod(rad2deg(sunTrueLongitude(T)), 360);
   const apparentDeg = pMod(rad2deg(sunApparentLongitude(T)), 360);
-  let equationOfCenter = trueDeg - meanDeg;
-  if (equationOfCenter > 180) equationOfCenter -= 360;
-  if (equationOfCenter < -180) equationOfCenter += 360;
-  const adjustedApparentDeg = apparentDeg + (TRADITIONAL_EQUATION_SCALE - 1) * equationOfCenter;
-  const ayanamsa = lahiriAyanamsaDeg(jd) + TRADITIONAL_AYANAMSA_OFFSET_DEG;
-  return pMod(adjustedApparentDeg - ayanamsa, 360);
+  return pMod(apparentDeg - lahiriAyanamsaDeg(jd), 360);
 }
 
 export interface CalendarDate {
@@ -67,16 +55,16 @@ export function compareDates(a: CalendarDate, b: CalendarDate): number {
   return dateKey(a) < dateKey(b) ? -1 : dateKey(a) > dateKey(b) ? 1 : 0;
 }
 
-/** Sun's (traditional-panjika-adjusted) sidereal longitude at the given local calendar date's sunset. */
-function siderealSunLongitudeAtSunset(date: CalendarDate, loc: GeoLocation): number {
+/** Sun's sidereal longitude at the given local calendar date's sunset. */
+function siderealSunLongitudeAtSunset(date: CalendarDate, loc: GeoLocation, system: PanchangSystem): number {
   const times = getSunTimes(date.year, date.month, date.day, loc);
   const jd = dateToJD(times.sunsetLocal);
-  return traditionalSiderealSunLongitudeDeg(jd);
+  return siderealSunLongitudeDeg(jd, system);
 }
 
 /** Which Bengali solar-month "slot" (0=Boishakh..11=Chaitra) a date falls in. */
-function monthIndexForDate(date: CalendarDate, loc: GeoLocation): number {
-  const lng = pMod(siderealSunLongitudeAtSunset(date, loc), 360);
+function monthIndexForDate(date: CalendarDate, loc: GeoLocation, system: PanchangSystem): number {
+  const lng = pMod(siderealSunLongitudeAtSunset(date, loc, system), 360);
   return Math.floor(lng / 30) % 12;
 }
 
@@ -103,14 +91,18 @@ const MAX_MONTH_LENGTH = 32;
  * Convert a Gregorian calendar date (interpreted as a local wall-clock date
  * at `loc`) to its Bengali Panjika equivalent.
  */
-export function toBengaliDate(date: CalendarDate, loc: GeoLocation = KOLKATA): BengaliDate {
-  const idx = monthIndexForDate(date, loc);
+export function toBengaliDate(
+  date: CalendarDate,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = "surya-siddhanta"
+): BengaliDate {
+  const idx = monthIndexForDate(date, loc, system);
 
   let day = 1;
   let cursor = date;
   for (let i = 0; i < MAX_MONTH_LENGTH; i++) {
     const prev = addDays(cursor, -1);
-    if (monthIndexForDate(prev, loc) === idx) {
+    if (monthIndexForDate(prev, loc, system) === idx) {
       day++;
       cursor = prev;
     } else {
@@ -141,7 +133,8 @@ export function toBengaliDate(date: CalendarDate, loc: GeoLocation = KOLKATA): B
 export function findBengaliMonthStart(
   bengaliYear: number,
   monthIndex: number,
-  loc: GeoLocation = KOLKATA
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = "surya-siddhanta"
 ): CalendarDate {
   // Poila Boishakh (monthIndex 0) of Bengali year Y falls around mid-April
   // of Gregorian year (Y + 593). Each subsequent month starts ~30.4 days later.
@@ -151,7 +144,7 @@ export function findBengaliMonthStart(
 
   // Walk to make sure we're inside the right month slot, then walk back to day 1.
   for (let guard = 0; guard < 10; guard++) {
-    const idx = monthIndexForDate(cursor, loc);
+    const idx = monthIndexForDate(cursor, loc, system);
     if (idx === monthIndex) break;
     // Step in the direction that should reduce the gap (roughly 30 days per slot).
     let gap = monthIndex - idx;
@@ -161,12 +154,12 @@ export function findBengaliMonthStart(
   }
 
   for (let i = 0; i < MAX_MONTH_LENGTH + 5; i++) {
-    if (monthIndexForDate(cursor, loc) !== monthIndex) {
+    if (monthIndexForDate(cursor, loc, system) !== monthIndex) {
       cursor = addDays(cursor, 1);
       continue;
     }
     const prev = addDays(cursor, -1);
-    if (monthIndexForDate(prev, loc) === monthIndex) {
+    if (monthIndexForDate(prev, loc, system) === monthIndex) {
       cursor = prev;
       continue;
     }
@@ -176,11 +169,16 @@ export function findBengaliMonthStart(
 }
 
 /** Number of days in a given Bengali month (varies slightly year to year). */
-export function bengaliMonthLength(bengaliYear: number, monthIndex: number, loc: GeoLocation = KOLKATA): number {
-  const start = findBengaliMonthStart(bengaliYear, monthIndex, loc);
+export function bengaliMonthLength(
+  bengaliYear: number,
+  monthIndex: number,
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = "surya-siddhanta"
+): number {
+  const start = findBengaliMonthStart(bengaliYear, monthIndex, loc, system);
   const nextMonthIndex = (monthIndex + 1) % 12;
   const nextYear = monthIndex === 11 ? bengaliYear + 1 : bengaliYear;
-  const nextStart = findBengaliMonthStart(nextYear, nextMonthIndex, loc);
+  const nextStart = findBengaliMonthStart(nextYear, nextMonthIndex, loc, system);
   const msPerDay = 86400000;
   const startMs = Date.UTC(start.year, start.month - 1, start.day);
   const nextMs = Date.UTC(nextStart.year, nextStart.month - 1, nextStart.day);
@@ -191,10 +189,11 @@ export function bengaliMonthLength(bengaliYear: number, monthIndex: number, loc:
 export function getBengaliMonthDates(
   bengaliYear: number,
   monthIndex: number,
-  loc: GeoLocation = KOLKATA
+  loc: GeoLocation = KOLKATA,
+  system: PanchangSystem = "surya-siddhanta"
 ): CalendarDate[] {
-  const start = findBengaliMonthStart(bengaliYear, monthIndex, loc);
-  const length = bengaliMonthLength(bengaliYear, monthIndex, loc);
+  const start = findBengaliMonthStart(bengaliYear, monthIndex, loc, system);
+  const length = bengaliMonthLength(bengaliYear, monthIndex, loc, system);
   const dates: CalendarDate[] = [];
   let cursor = start;
   for (let i = 0; i < length; i++) {

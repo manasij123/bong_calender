@@ -1,20 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDate } from "@bong/panjika-core";
+import { CalendarDate, PanchangSystem } from "@bong/panjika-core";
 import { buildFestivalSearchIndex, searchFestivals } from "../lib/search";
 
 interface SearchOverlayProps {
   open: boolean;
   onClose: () => void;
   mode: "bn" | "en";
+  system: PanchangSystem;
   onSelectDate: (date: CalendarDate) => void;
 }
 
-export default function SearchOverlay({ open, onClose, mode, onSelectDate }: SearchOverlayProps) {
+export default function SearchOverlay({ open, onClose, mode, system, onSelectDate }: SearchOverlayProps) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const index = useMemo(() => buildFestivalSearchIndex(new Date().getFullYear()), []);
-  const results = useMemo(() => searchFestivals(query, index, mode), [query, index, mode]);
+  const index = useMemo(() => buildFestivalSearchIndex(new Date().getFullYear(), system), [system]);
+  const results = useMemo(() => searchFestivals(query, index, mode, system), [query, index, mode, system]);
 
   useEffect(() => {
     if (!open) return;

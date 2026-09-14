@@ -1,4 +1,11 @@
-import { DayDetail, KOLKATA, toBengaliNumber, BENGALI_MONTH_NAMES_EN, ENGLISH_MONTH_NAMES } from "@bong/panjika-core";
+import {
+  DayDetail,
+  KOLKATA,
+  PanchangSystem,
+  toBengaliNumber,
+  BENGALI_MONTH_NAMES_EN,
+  ENGLISH_MONTH_NAMES,
+} from "@bong/panjika-core";
 import { formatTimeBn, formatTimeRangeBn } from "../lib/format";
 import StatTile from "./StatTile";
 import FestivalBadge from "./FestivalBadge";
@@ -6,9 +13,10 @@ import FestivalBadge from "./FestivalBadge";
 interface DayDetailPanelProps {
   detail: DayDetail;
   mode: "bn" | "en";
+  system: PanchangSystem;
 }
 
-export default function DayDetailPanel({ detail, mode }: DayDetailPanelProps) {
+export default function DayDetailPanel({ detail, mode, system }: DayDetailPanelProps) {
   const { info, events, kalam, auspicious } = detail;
   const { bengali, panchang, sunTimes } = info;
 
@@ -82,8 +90,10 @@ export default function DayDetailPanel({ detail, mode }: DayDetailPanelProps) {
       )}
 
       <p className="text-[10px] text-[color:var(--text-muted)] leading-relaxed border-t border-[color:var(--border)] pt-3">
-        হিসাব ভিত্তি: আধুনিক জ্যোতির্বৈজ্ঞানিক অবস্থান (Meeus) + লাহিড়ী অয়নাংশ, কলকাতার জন্য গণনা করা। মুদ্রিত পঞ্জিকার
-        সাথে সংক্রান্তি তারিখে ১–২ দিনের পার্থক্য থাকতে পারে, যা বিভিন্ন পঞ্জিকা-প্রকাশকের মধ্যেও স্বাভাবিক। ঈদ/মহররম/শবে
+        {system === "surya-siddhanta"
+          ? "হিসাব ভিত্তি: সূর্যসিদ্ধান্ত (ঐতিহ্যগত মধ্যম গতি + মন্দ সংস্কার), কলকাতার জন্য গণনা করা -- বেশিরভাগ মুদ্রিত পঞ্জিকার কাছাকাছি।"
+          : "হিসাব ভিত্তি: দৃকসিদ্ধান্ত -- আধুনিক জ্যোতির্বৈজ্ঞানিক অবস্থান (Meeus) + লাহিড়ী অয়নাংশ, কলকাতার জন্য গণনা করা।"}{" "}
+        মুদ্রিত পঞ্জিকার সাথে সংক্রান্তি তারিখে ১–২ দিনের পার্থক্য থাকতে পারে, যা বিভিন্ন পঞ্জিকা-প্রকাশকের মধ্যেও স্বাভাবিক। ঈদ/মহররম/শবে
         বরাতের তারিখ হিসাব-ভিত্তিক (tabular) হিজরি ক্যালেন্ডার অনুযায়ী, বাস্তবে চাঁদ দেখার উপর ভিত্তি করে ঘোষিত তারিখের
         সাথে ১ দিন আগে-পিছে হতে পারে।
       </p>

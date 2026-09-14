@@ -2,6 +2,7 @@ export * from "./julian.js";
 export * from "./sun.js";
 export * from "./moon.js";
 export * from "./ayanamsa.js";
+export * from "./suryaSiddhanta.js";
 export * from "./panchang.js";
 export * from "./solarTime.js";
 export * from "./numerals.js";

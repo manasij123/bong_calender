@@ -5,20 +5,37 @@ import { jdToJDE, jdeCentury, pMod, rad2deg } from "./julian.js";
 import { sunApparentLongitude } from "./sun.js";
 import { moonPosition } from "./moon.js";
 import { lahiriAyanamsaDeg } from "./ayanamsa.js";
+import {
+  PanchangSystem,
+  suryaSiddhantaSunSiderealLongitudeDeg,
+  suryaSiddhantaMoonSiderealLongitudeDeg,
+} from "./suryaSiddhanta.js";
 
 export interface Longitudes {
   /** Tropical (apparent) longitude of Sun, degrees 0..360. */
   sunTropical: number;
   /** Tropical (apparent) longitude of Moon, degrees 0..360. */
   moonTropical: number;
-  /** Sidereal (Lahiri) longitude of Sun, degrees 0..360. */
+  /** Sidereal longitude of Sun (Lahiri in "drik", classical in "surya-siddhanta"), degrees 0..360. */
   sunSidereal: number;
-  /** Sidereal (Lahiri) longitude of Moon, degrees 0..360. */
+  /** Sidereal longitude of Moon (Lahiri in "drik", classical in "surya-siddhanta"), degrees 0..360. */
   moonSidereal: number;
 }
 
-/** Compute Sun & Moon tropical/sidereal ecliptic longitudes for a UT Julian Day. */
-export function longitudesAt(jd: number): Longitudes {
+/**
+ * Compute Sun & Moon tropical/sidereal ecliptic longitudes for a UT Julian
+ * Day, under either the modern precise ("drik") or classical mean-motion
+ * ("surya-siddhanta") system. The classical system is natively sidereal,
+ * so its "tropical" fields here are just aliased to the sidereal ones --
+ * harmless, since every consumer (tithi, karana) only ever uses the
+ * Sun-Moon *difference*, which an ayanamsa-like shift cancels out of.
+ */
+export function longitudesAt(jd: number, system: PanchangSystem = "surya-siddhanta"): Longitudes {
+  if (system === "surya-siddhanta") {
+    const sunSidereal = suryaSiddhantaSunSiderealLongitudeDeg(jd);
+    const moonSidereal = suryaSiddhantaMoonSiderealLongitudeDeg(jd);
+    return { sunTropical: sunSidereal, moonTropical: moonSidereal, sunSidereal, moonSidereal };
+  }
   const jde = jdToJDE(jd);
   const T = jdeCentury(jde);
   const sunLng = pMod(rad2deg(sunApparentLongitude(T)), 360);
@@ -207,8 +224,8 @@ export interface PanchangSummary {
 }
 
 /** Full panchang for a given UT Julian Day moment. */
-export function getPanchang(jd: number): PanchangSummary {
-  const longitudes = longitudesAt(jd);
+export function getPanchang(jd: number, system: PanchangSystem = "surya-siddhanta"): PanchangSummary {
+  const longitudes = longitudesAt(jd, system);
   return {
     longitudes,
     tithi: getTithi(longitudes),
