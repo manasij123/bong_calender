@@ -2,7 +2,7 @@ import { DayCell, dateKey, toBengaliNumber } from "@bong/panjika-core";
 import FestivalIconGlyph, { IconKey } from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
 import MarqueeText from "./MarqueeText";
-import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgba, deepenColor } from "../lib/festivalColor";
+import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgbaVar, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
 const WEEKDAY_HEADERS_BN = ["র", "সো", "ম", "বু", "বৃ", "শু", "শ"];
@@ -91,7 +91,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              style={badge ? { backgroundColor: hexToRgba(badge.color, 0.16) } : undefined}
+              style={badge ? { backgroundColor: hexToRgbaVar(badge.color, "--badge-tint-alpha", 0.16) } : undefined}
               className={`group relative aspect-[4/6.6] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}

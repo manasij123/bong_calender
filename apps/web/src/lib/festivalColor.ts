@@ -23,6 +23,15 @@ export function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+/** A badge color tinted by a CSS variable alpha, so the wash can differ per theme. */
+export function hexToRgbaVar(hex: string, cssVarName: string, fallbackAlpha: number): string {
+  const clean = hex.replace("#", "");
+  const r = parseInt(clean.substring(0, 2), 16);
+  const g = parseInt(clean.substring(2, 4), 16);
+  const b = parseInt(clean.substring(4, 6), 16);
+  return `rgb(${r} ${g} ${b} / var(${cssVarName}, ${fallbackAlpha}))`;
+}
+
 /** A darker, fully-opaque version of a badge color, for a solid chip behind artwork. */
 export function deepenColor(hex: string, factor = 0.7): string {
   const clean = hex.replace("#", "");

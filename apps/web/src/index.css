@@ -17,6 +17,11 @@
   --krishna: #5b6b9e;
   --festival-art-tint: #201c16;
   --festival-badge-bg: #ffffff;
+  /* Same alpha reads as a much fainter wash over a light page than a dark
+     one, since white + 16% tint is barely pastel while black + 16% tint is
+     already a visible deep tone -- so the light theme needs a higher
+     alpha for the festival-cell tint to stand out comparably. */
+  --badge-tint-alpha: 0.32;
 }
 
 .dark {
@@ -34,6 +39,7 @@
   --krishna: #8ea3ff;
   --festival-art-tint: #d9c9f5;
   --festival-badge-bg: #12141f;
+  --badge-tint-alpha: 0.16;
 }
 
 * {
