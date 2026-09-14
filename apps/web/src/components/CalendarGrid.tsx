@@ -2,6 +2,7 @@ import { DayCell, dateKey, toBengaliNumber } from "@bong/panjika-core";
 import FestivalIconGlyph, { IconKey } from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
 import MarqueeText from "./MarqueeText";
+import MultiEventBadge from "./MultiEventBadge";
 import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgbaVar, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
@@ -85,13 +86,15 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                 ? EN_MONTH_SHORT[cell.date.month - 1]
                 : String(cell.date.day)
               : toBengaliNumber(cell.info.bengali.day);
-          const badge = badgeFor(cell, mode);
+          const hasMultipleEvents = cell.events.length >= 2;
+          const badge = hasMultipleEvents ? null : badgeFor(cell, mode);
+          const cellTintColor = hasMultipleEvents ? CATEGORY_COLOR[cell.events[0].festival.category] : badge?.color;
 
           return (
             <button
               key={key}
               onClick={() => onSelect(cell)}
-              style={badge ? { backgroundColor: hexToRgbaVar(badge.color, "--badge-tint-alpha", 0.16) } : undefined}
+              style={cellTintColor ? { backgroundColor: hexToRgbaVar(cellTintColor, "--badge-tint-alpha", 0.16) } : undefined}
               className={`group relative aspect-[4/6.6] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
                 ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
@@ -107,7 +110,9 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                 </span>
               </div>
 
-              {badge ? (
+              {hasMultipleEvents ? (
+                <MultiEventBadge events={cell.events} mode={mode} primaryDateLabel={primary} isSunday={isSunday} />
+              ) : badge ? (
                 <div className="flex-1 min-h-0 w-full flex flex-col items-center justify-center gap-0.5 pb-1.5 px-1" title={badge.label}>
                   {badge.images ? (
                     <div
