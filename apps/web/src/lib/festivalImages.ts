@@ -62,6 +62,7 @@ export const FESTIVAL_IMAGES: Record<string, string[]> = {
 
   "vidyasagar-jayanti": [`${BASE}/vidyasagar.png`],
   "vidyasagar-tirodhan": [`${BASE}/vidyasagar.png`],
+  "netaji-jayanti": [`${BASE}/netaji.png`],
 
   "buddha-purnima": [`${BASE}/buddha-purnima.png`],
   "ram-navami": [`${BASE}/ram-navami.png`],
