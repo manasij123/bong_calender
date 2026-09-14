@@ -41,12 +41,7 @@ export default function DayDetailPanel({ detail, mode }: DayDetailPanelProps) {
         >
           {events.map((e) => (
             <div key={e.festival.id} className="w-full max-w-[220px]">
-              <FestivalBadge
-                event={e}
-                bengaliDayLabel={toBengaliNumber(bengali.day)}
-                gregorianDayLabel={String(detail.date.day)}
-                mode={mode}
-              />
+              <FestivalBadge event={e} mode={mode} />
             </div>
           ))}
         </div>
