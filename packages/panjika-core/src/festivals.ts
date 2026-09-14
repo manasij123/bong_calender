@@ -263,6 +263,43 @@ export interface ResolvedEvent {
   date: CalendarDate;
 }
 
+/** The tithi that immediately follows a given one (paksha changes at 15). */
+function nextTithiStep(
+  paksha: "shukla" | "krishna",
+  index: number
+): { paksha: "shukla" | "krishna"; index: number } {
+  if (index < 15) return { paksha, index: index + 1 };
+  return paksha === "shukla" ? { paksha: "krishna", index: 1 } : { paksha: "shukla", index: 1 };
+}
+
+/**
+ * True if a target tithi falls strictly between two consecutive days'
+ * sunrise tithis without ever prevailing at a sunrise itself -- a kshaya
+ * (lost) tithi, one short enough to begin and end within a single day's
+ * daylight. Ordinary festivals still get assigned that day in real
+ * panjikas rather than being dropped, which is what the "tithi" rule's
+ * fallback below uses this for.
+ */
+function tithiJumpCovers(
+  t0: { paksha: "shukla" | "krishna"; index: number },
+  t1: { paksha: "shukla" | "krishna"; index: number },
+  paksha: "shukla" | "krishna",
+  index: number
+): boolean {
+  // A tithi can also span two sunrises (vriddhi), repeating t0 unchanged
+  // at t1 -- that's not a jump at all, so bail out before the forward
+  // scan below, which would otherwise wrap almost a full lunar month
+  // forward looking for a t1 that's actually "behind" it.
+  if (t0.paksha === t1.paksha && t0.index === t1.index) return false;
+  let cur = nextTithiStep(t0.paksha, t0.index);
+  for (let i = 0; i < 30; i++) {
+    if (cur.paksha === t1.paksha && cur.index === t1.index) return false;
+    if (cur.paksha === paksha && cur.index === index) return true;
+    cur = nextTithiStep(cur.paksha, cur.index);
+  }
+  return false;
+}
+
 /**
  * Resolve every rule-based Bengali festival that falls within a Bengali
  * year, using a precomputed array of that year's per-day panchang.
@@ -294,12 +331,28 @@ export function resolveBengaliFestivals(
         resolvedIndexById.set(festival.id, yearDays.indexOf(last));
       }
     } else if (rule.kind === "tithi") {
-      const idx = yearDays.findIndex(
+      let idx = yearDays.findIndex(
         (d) =>
           d.bengali.monthIndex === rule.monthIndex &&
           d.panchang.tithi.paksha === rule.paksha &&
           d.panchang.tithi.index === rule.tithiIndex
       );
+      if (idx < 0) {
+        // Kshaya tithi: rule.tithiIndex never prevails at any sunrise this
+        // year, so it's entirely contained within one day's daylight hours
+        // -- assign the festival to that day (the one right before the
+        // "jump") instead of silently dropping it. Verified against real
+        // 2026 dates that hit exactly this case: Janmashtami (Krishna
+        // Ashtami, Bhadra) lands on 4 September, and Saraswati Puja/Basant
+        // Panchami (Shukla Panchami, Magh) on 23 January -- both years
+        // where that tithi is kshaya, and both landing on the pre-jump day.
+        idx = yearDays.findIndex((d, i) => {
+          if (d.bengali.monthIndex !== rule.monthIndex) return false;
+          const next = yearDays[i + 1];
+          if (!next) return false;
+          return tithiJumpCovers(d.panchang.tithi, next.panchang.tithi, rule.paksha, rule.tithiIndex);
+        });
+      }
       if (idx >= 0) {
         events.push({ festival, date: yearDays[idx].gregorian });
         resolvedIndexById.set(festival.id, idx);
