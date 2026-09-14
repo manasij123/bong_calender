@@ -9,6 +9,7 @@ import {
 import { formatTimeBn, formatTimeRangeBn } from "../lib/format";
 import StatTile from "./StatTile";
 import FestivalBadge from "./FestivalBadge";
+import AnimatedValue from "./AnimatedValue";
 
 interface DayDetailPanelProps {
   detail: DayDetail;
@@ -30,14 +31,16 @@ export default function DayDetailPanel({ detail, mode, system }: DayDetailPanelP
         <p className="text-xs font-semibold tracking-wide text-[color:var(--accent)] bn">{bengali.weekdayName}</p>
         {mode === "bn" ? (
           <>
-            <h3 className="text-2xl font-extrabold bn leading-tight">{bengaliDateLine}</h3>
+            <h3 className="text-2xl font-extrabold bn leading-tight">
+              <AnimatedValue value={bengaliDateLine} />
+            </h3>
             <p className="text-sm text-[color:var(--text-muted)]">{gregorianDateLine}</p>
           </>
         ) : (
           <>
             <h3 className="text-2xl font-extrabold leading-tight">{gregorianDateLine}</h3>
             <p className="text-sm text-[color:var(--text-muted)] bn">
-              {bengaliDateLine} <span className="num-en">· {bengaliDateLineEn}</span>
+              <AnimatedValue value={bengaliDateLine} /> <span className="num-en">· <AnimatedValue value={bengaliDateLineEn} /></span>
             </p>
           </>
         )}

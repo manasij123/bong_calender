@@ -1,3 +1,5 @@
+import AnimatedValue from "./AnimatedValue";
+
 interface StatTileProps {
   label: string;
   value: string;
@@ -14,8 +16,8 @@ export default function StatTile({ label, value, sub, accent = "default" }: Stat
       <span className="text-[11px] uppercase tracking-wide text-[color:var(--text-muted)] font-medium bn">
         {label}
       </span>
-      <span className={`text-base font-semibold bn truncate ${accentClass}`}>{value}</span>
-      {sub && <span className="text-xs text-[color:var(--text-muted)] bn truncate">{sub}</span>}
+      <AnimatedValue value={value} className={`text-base font-semibold bn truncate ${accentClass}`} />
+      {sub && <AnimatedValue value={sub} className="text-xs text-[color:var(--text-muted)] bn truncate" />}
     </div>
   );
 }

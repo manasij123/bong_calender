@@ -98,3 +98,46 @@ body {
 .animate-marquee {
   animation: marquee-scroll 6s ease-in-out infinite;
 }
+
+/* Crossfade for a Bengali date/tithi value that changes when the
+   পঞ্জিকা রীতি (ঐতিহ্যগত/আধুনিক) toggle switches system -- see
+   AnimatedValue.tsx. Both the old and new value sit in the same grid
+   cell so the surrounding layout never shifts and there's never a blank
+   frame between them. */
+.value-crossfade {
+  display: inline-grid;
+}
+
+.value-crossfade > * {
+  grid-area: 1 / 1;
+}
+
+@keyframes value-crossfade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes value-crossfade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.value-crossfade-old {
+  animation: value-crossfade-out 280ms ease-out forwards;
+}
+
+.value-crossfade-new {
+  animation: value-crossfade-in 280ms ease-out forwards;
+}

@@ -5,6 +5,7 @@ import CyclingImage from "./CyclingImage";
 import MarqueeText from "./MarqueeText";
 import { CATEGORY_COLOR, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES } from "../lib/festivalImages";
+import AnimatedValue from "./AnimatedValue";
 
 interface MultiEventBadgeProps {
   events: ResolvedEvent[];
@@ -44,7 +45,7 @@ export default function MultiEventBadge({
             isSunday ? "text-[color:var(--today-ring)]" : ""
           }`}
         >
-          {primaryDateLabel}
+          <AnimatedValue value={primaryDateLabel} />
         </span>
       </div>
     );

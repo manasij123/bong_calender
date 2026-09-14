@@ -3,6 +3,7 @@ import FestivalIconGlyph, { IconKey } from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
 import MarqueeText from "./MarqueeText";
 import MultiEventBadge from "./MultiEventBadge";
+import AnimatedValue from "./AnimatedValue";
 import { CATEGORY_COLOR, TITHI_BADGE_COLOR, hexToRgbaVar, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
@@ -106,7 +107,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                     mode === "bn" ? "num-en" : "bn"
                   } ${isSunday ? "text-[color:var(--today-ring)]" : "text-[color:var(--text-muted)]"}`}
                 >
-                  {secondary}
+                  <AnimatedValue value={secondary} />
                 </span>
               </div>
 
@@ -142,7 +143,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                       isSunday ? "text-[color:var(--today-ring)]" : ""
                     }`}
                   >
-                    {primary}
+                    <AnimatedValue value={primary} />
                   </span>
                 </div>
               )}
