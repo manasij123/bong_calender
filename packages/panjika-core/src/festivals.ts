@@ -147,7 +147,7 @@ export const GREGORIAN_HOLIDAYS: {
   { id: "lokenath-tirodhan", nameBn: "লোকনাথ ব্রহ্মচারীর তিরোধান দিবস", nameEn: "Lokenath Brahmachari's Death Anniversary", month: 6, day: 1, emoji: "🪔", icon: "diya" },
   { id: "chittaranjan-das-tirodhan", nameBn: "চিত্তরঞ্জন দাশের প্রয়াণ দিবস", nameEn: "Chittaranjan Das's Death Anniversary", month: 6, day: 16, emoji: "🇮🇳", icon: "flag" },
   { id: "prafulla-chandra-ray-tirodhan", nameBn: "আচার্য প্রফুল্লচন্দ্র রায়ের প্রয়াণ দিবস", nameEn: "Acharya Prafulla Chandra Ray's Death Anniversary", month: 6, day: 16, emoji: "🔬", icon: "gear" },
-  { id: "bankim-chandra-jayanti", nameBn: "বঙ্কিমচন্দ্র চট্টোপাধ্যায়ের জন্মজয়ন্তী", nameEn: "Bankim Chandra Chattopadhyay's Birthday", month: 6, day: 26, emoji: "📖", icon: "book" },
+  { id: "bankim-chandra-jayanti", nameBn: "বঙ্কিমচন্দ্র চট্টোপাধ্যায়ের জন্মজয়ন্তী", nameEn: "Bankim Chandra Chattopadhyay's Birthday", month: 6, day: 27, emoji: "📖", icon: "book" },
   { id: "ashutosh-mukherjee-jayanti", nameBn: "আশুতোষ মুখোপাধ্যায়ের জন্মজয়ন্তী", nameEn: "Ashutosh Mukherjee's Birthday", month: 6, day: 29, emoji: "📖", icon: "book" },
   { id: "madhusudan-dutta-tirodhan", nameBn: "মাইকেল মধুসূদন দত্তের প্রয়াণ দিবস", nameEn: "Michael Madhusudan Dutt's Death Anniversary", month: 6, day: 29, emoji: "📖", icon: "book" },
   { id: "vivekananda-tirodhan", nameBn: "স্বামী বিবেকানন্দের তিরোধান দিবস (মহাসমাধি)", nameEn: "Swami Vivekananda's Death Anniversary (Mahasamadhi)", month: 7, day: 4, emoji: "🧘", icon: "diya" },
