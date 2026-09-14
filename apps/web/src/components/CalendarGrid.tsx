@@ -7,6 +7,7 @@ import { FESTIVAL_IMAGES, TITHI_IMAGES } from "../lib/festivalImages";
 
 const WEEKDAY_HEADERS_BN = ["র", "সো", "ম", "বু", "বৃ", "শু", "শ"];
 const WEEKDAY_HEADERS_EN = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const EN_MONTH_SHORT = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
 interface CalendarGridProps {
   mode: "bn" | "en";
@@ -77,7 +78,13 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
           const isSelected = key === selectedKey;
           const isSunday = cell.info.bengali.weekday === 0;
           const primary = mode === "bn" ? toBengaliNumber(cell.info.bengali.day) : String(cell.date.day);
-          const secondary = mode === "bn" ? String(cell.date.day) : toBengaliNumber(cell.info.bengali.day);
+          const isEnglishMonthStart = cell.date.day === 1;
+          const secondary =
+            mode === "bn"
+              ? isEnglishMonthStart
+                ? EN_MONTH_SHORT[cell.date.month - 1]
+                : String(cell.date.day)
+              : toBengaliNumber(cell.info.bengali.day);
           const badge = badgeFor(cell, mode);
 
           return (
