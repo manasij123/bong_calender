@@ -40,7 +40,7 @@ export const FESTIVAL_IMAGES: Record<string, string[]> = {
   "independence-day": [`${BASE}/independence-day.png`],
   "teachers-day": [`${BASE}/teachers-day.png`],
   "radhakrishnan-jayanti": [`${BASE}/teachers-day.png`],
-  "radhakrishnan-tirodhan": [`${BASE}/teachers-day.png`],
+  "radhakrishnan-tirodhan": [`${BASE}/radhakrishnan.png`],
   "gandhi-jayanti": [`${BASE}/gandhi-jayanti.png`],
   "childrens-day": [`${BASE}/childrens-day.png`],
   "christmas-eve": [`${BASE}/christmas-eve.png`],
