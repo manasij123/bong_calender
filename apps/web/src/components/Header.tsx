@@ -88,7 +88,9 @@ export default function Header({
               onClick={() => onSystemChange("surya-siddhanta")}
               title="সূর্যসিদ্ধান্ত (ঐতিহ্যগত পঞ্জিকা)"
               className={`px-2.5 py-1 rounded-full transition-colors bn ${
-                system === "surya-siddhanta" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
+                system === "surya-siddhanta"
+                  ? "bg-[color:var(--accent-3)] text-white dark:text-black"
+                  : "text-[color:var(--text-muted)]"
               }`}
             >
               ঐতিহ্যগত (সূর্য)
@@ -97,7 +99,9 @@ export default function Header({
               onClick={() => onSystemChange("drik")}
               title="দৃকসিদ্ধান্ত (আধুনিক জ্যোতির্বৈজ্ঞানিক পঞ্জিকা)"
               className={`px-2.5 py-1 rounded-full transition-colors bn ${
-                system === "drik" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
+                system === "drik"
+                  ? "bg-[color:var(--accent-3)] text-white dark:text-black"
+                  : "text-[color:var(--text-muted)]"
               }`}
             >
               আধুনিক (দৃক)
