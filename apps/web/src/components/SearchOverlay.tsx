@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { CalendarDate, PanchangSystem } from "@bong/panjika-core";
 import { buildFestivalSearchIndex, searchFestivals } from "../lib/search";
+import MaskIcon from "./MaskIcon";
+
+const ICONS = `${import.meta.env.BASE_URL}ui-icons`;
 
 interface SearchOverlayProps {
   open: boolean;
@@ -46,7 +49,12 @@ export default function SearchOverlay({ open, onClose, mode, system, onSelectDat
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
       <div className="relative w-full max-w-md rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)] shadow-2xl overflow-hidden">
         <div className="flex items-center gap-2 border-b border-[color:var(--border)] px-3 py-2.5">
-          <Search aria-hidden className="shrink-0 text-[color:var(--text-muted)]" style={{ width: "1.1rem", height: "1.1rem" }} />
+          <MaskIcon
+            src={`${ICONS}/search.png`}
+            alt=""
+            className="shrink-0 text-[color:var(--text-muted)]"
+            style={{ width: "1.1rem", height: "1.1rem" }}
+          />
           <input
             ref={inputRef}
             value={query}

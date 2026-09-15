@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ClipboardList, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import MaskIcon from "./components/MaskIcon";
 import {
   CalendarDate,
   DayCell,
@@ -226,7 +227,7 @@ export default function App() {
             className="lg:hidden flex items-center justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)]/60 px-4 py-3 shadow-glow text-left"
           >
             <span className="bn font-semibold flex items-center gap-2">
-              <ClipboardList aria-hidden style={{ width: "1.1rem", height: "1.1rem" }} />
+              <MaskIcon src={`${import.meta.env.BASE_URL}ui-icons/list.png`} alt="" style={{ width: "1.1rem", height: "1.1rem" }} />
               মাসের তালিকা দেখুন
             </span>
             <ArrowRight aria-hidden className="text-[color:var(--text-muted)]" style={{ width: "1.1rem", height: "1.1rem" }} />

@@ -1,7 +1,7 @@
 import { PanchangSystem } from "@bong/panjika-core";
-import { Search, Sun, Moon } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRing } from "@fortawesome/free-solid-svg-icons";
+import MaskIcon from "./MaskIcon";
+
+const ICONS = `${import.meta.env.BASE_URL}ui-icons`;
 
 interface HeaderProps {
   mode: "bn" | "en";
@@ -62,21 +62,25 @@ export default function Header({
             title="শুভ কাজের দিন (বিবাহ/অন্নপ্রাশন/গৃহপ্রবেশ)"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            <FontAwesomeIcon icon={faRing} style={{ width: "1.1rem", height: "1.1rem" }} />
+            <MaskIcon src={`${ICONS}/shuvo-karmo.png`} alt="Shuvo Karmo" style={{ width: "1.5rem", height: "1.5rem" }} />
           </button>
           <button
             onClick={onOpenSearch}
             aria-label="Search"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            <Search style={{ width: "1.1rem", height: "1.1rem" }} />
+            <MaskIcon src={`${ICONS}/search.png`} alt="Search" style={{ width: "1.1rem", height: "1.1rem" }} />
           </button>
           <button
             onClick={onThemeToggle}
             aria-label="Toggle theme"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            {theme === "dark" ? <Sun style={{ width: "1.1rem", height: "1.1rem" }} /> : <Moon style={{ width: "1.1rem", height: "1.1rem" }} />}
+            {theme === "dark" ? (
+              <MaskIcon src={`${ICONS}/sun.png`} alt="Switch to light theme" style={{ width: "1.2rem", height: "1.2rem" }} />
+            ) : (
+              <MaskIcon src={`${ICONS}/moon.png`} alt="Switch to dark theme" style={{ width: "1.2rem", height: "1.2rem" }} />
+            )}
           </button>
         </div>
       </div>
