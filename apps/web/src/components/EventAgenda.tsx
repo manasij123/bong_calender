@@ -33,7 +33,7 @@ export default function EventAgenda({ mode, cells, selectedKey, todayKey, onSele
             >
               <div className="min-w-0">
                 <p className={`text-sm font-semibold bn ${isToday ? "text-[color:var(--today-ring)]" : ""}`}>
-                  {dateLabel}, {cell.info.bengali.weekdayName}
+                  {dateLabel}, {cell.info.displayBengali.weekdayName}
                 </p>
                 {cell.events.length > 0 ? (
                   <div className="flex items-center gap-2 flex-wrap">
@@ -57,7 +57,7 @@ export default function EventAgenda({ mode, cells, selectedKey, todayKey, onSele
               {mode === "bn" ? (
                 <span className="text-xs text-[color:var(--text-muted)] shrink-0 num-en">{cell.date.month}/{cell.date.day}</span>
               ) : (
-                <span className="text-xs text-[color:var(--text-muted)] shrink-0 bn">{toBengaliNumber(cell.info.bengali.day)} {cell.info.bengali.monthName}</span>
+                <span className="text-xs text-[color:var(--text-muted)] shrink-0 bn">{toBengaliNumber(cell.info.displayBengali.day)} {cell.info.displayBengali.monthName}</span>
               )}
             </button>
           );

@@ -8,7 +8,7 @@ import {
   getBengaliMonthGrid,
   getDayDetail,
   getGregorianMonthGrid,
-  toBengaliDate,
+  toBengaliDateDisplay,
   today,
   toBengaliNumber,
   BENGALI_MONTH_NAMES,
@@ -60,7 +60,7 @@ export default function App() {
   const [theme, toggleTheme] = useTheme();
   const [system, setSystem] = useSystem();
   const t = useMemo(() => today(), []);
-  const tb = useMemo(() => toBengaliDate(t, KOLKATA, system), [t, system]);
+  const tb = useMemo(() => toBengaliDateDisplay(t, KOLKATA, system), [t, system]);
   const todayKey = dateKey(t);
 
   const [mode, setMode] = useState<Mode>("bn");
@@ -87,7 +87,7 @@ export default function App() {
   // whenever the system toggle changes, instead of leaving it stale.
   useEffect(() => {
     if (mode !== "bn") return;
-    const bd = toBengaliDate(selectedDate, KOLKATA, system);
+    const bd = toBengaliDateDisplay(selectedDate, KOLKATA, system);
     setBengaliYear(bd.year);
     setBengaliMonthIndex(bd.monthIndex);
   }, [system]);
@@ -98,7 +98,7 @@ export default function App() {
       setGregorianYear(selectedDate.year);
       setGregorianMonth(selectedDate.month);
     } else {
-      const bd = toBengaliDate(selectedDate, KOLKATA, system);
+      const bd = toBengaliDateDisplay(selectedDate, KOLKATA, system);
       setBengaliYear(bd.year);
       setBengaliMonthIndex(bd.monthIndex);
     }
@@ -162,7 +162,7 @@ export default function App() {
 
   function handleSearchSelectDate(date: CalendarDate) {
     if (mode === "bn") {
-      const bd = toBengaliDate(date, KOLKATA, system);
+      const bd = toBengaliDateDisplay(date, KOLKATA, system);
       setBengaliYear(bd.year);
       setBengaliMonthIndex(bd.monthIndex);
     } else {
@@ -188,8 +188,8 @@ export default function App() {
       const span = startLabel === endLabel ? startLabel : `${startLabel}-${endLabel}`;
       return `${span} ${last.date.year}`;
     }
-    const startBn = first.info.bengali;
-    const endBn = last.info.bengali;
+    const startBn = first.info.displayBengali;
+    const endBn = last.info.displayBengali;
     const span =
       startBn.monthIndex === endBn.monthIndex
         ? BENGALI_MONTH_NAMES[startBn.monthIndex]

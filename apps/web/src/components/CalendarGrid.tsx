@@ -50,7 +50,7 @@ function badgeFor(cell: DayCell, mode: "bn" | "en"): CellBadge | null {
 
 export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSelect }: CalendarGridProps) {
   if (cells.length === 0) return null;
-  const leading = cells[0].info.bengali.weekday;
+  const leading = cells[0].info.displayBengali.weekday;
   const trailing = (7 - ((leading + cells.length) % 7)) % 7;
   const headers = mode === "bn" ? WEEKDAY_HEADERS_BN : WEEKDAY_HEADERS_EN;
 
@@ -78,15 +78,15 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
           const key = dateKey(cell.date);
           const isToday = key === todayKey;
           const isSelected = key === selectedKey;
-          const isSunday = cell.info.bengali.weekday === 0;
-          const primary = mode === "bn" ? toBengaliNumber(cell.info.bengali.day) : String(cell.date.day);
+          const isSunday = cell.info.displayBengali.weekday === 0;
+          const primary = mode === "bn" ? toBengaliNumber(cell.info.displayBengali.day) : String(cell.date.day);
           const isEnglishMonthStart = cell.date.day === 1;
           const secondary =
             mode === "bn"
               ? isEnglishMonthStart
                 ? EN_MONTH_SHORT[cell.date.month - 1]
                 : String(cell.date.day)
-              : toBengaliNumber(cell.info.bengali.day);
+              : toBengaliNumber(cell.info.displayBengali.day);
           const hasMultipleEvents = cell.events.length >= 2;
           const badge = hasMultipleEvents ? null : badgeFor(cell, mode);
           const cellTintColor = hasMultipleEvents ? CATEGORY_COLOR[cell.events[0].festival.category] : badge?.color;

@@ -19,7 +19,7 @@ interface DayDetailPanelProps {
 
 export default function DayDetailPanel({ detail, mode, system }: DayDetailPanelProps) {
   const { info, events, kalam, auspicious } = detail;
-  const { bengali, panchang, sunTimes } = info;
+  const { displayBengali: bengali, panchang, sunTimes } = info;
 
   const bengaliDateLine = `${bengali.monthName} ${toBengaliNumber(bengali.day)}, ${toBengaliNumber(bengali.year)}`;
   const bengaliDateLineEn = `${BENGALI_MONTH_NAMES_EN[bengali.monthIndex]} ${bengali.day}, ${bengali.year}`;

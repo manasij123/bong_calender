@@ -28,13 +28,13 @@ const SECTIONS: { key: keyof ShuvoKarmoResult; titleBn: string; titleEn: string;
 
 function dateLabel(cell: DayCell, mode: "bn" | "en"): string {
   if (mode === "bn") {
-    return `${toBengaliNumber(cell.date.day)} ${ENGLISH_MONTH_NAMES[cell.date.month - 1]}, ${cell.info.bengali.weekdayName}`;
+    return `${toBengaliNumber(cell.date.day)} ${ENGLISH_MONTH_NAMES[cell.date.month - 1]}, ${cell.info.displayBengali.weekdayName}`;
   }
-  return `${cell.date.day} ${ENGLISH_MONTH_NAMES[cell.date.month - 1]}, ${cell.info.bengali.weekdayName}`;
+  return `${cell.date.day} ${ENGLISH_MONTH_NAMES[cell.date.month - 1]}, ${cell.info.displayBengali.weekdayName}`;
 }
 
 function bengaliDateSub(cell: DayCell): string {
-  return `${BENGALI_MONTH_NAMES[cell.info.bengali.monthIndex]} ${toBengaliNumber(cell.info.bengali.day)}`;
+  return `${BENGALI_MONTH_NAMES[cell.info.displayBengali.monthIndex]} ${toBengaliNumber(cell.info.displayBengali.day)}`;
 }
 
 export default function ShuvoKarmoOverlay({ open, onClose, mode, cells, loc, system }: ShuvoKarmoOverlayProps) {

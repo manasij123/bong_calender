@@ -4,6 +4,7 @@ import {
   ResolvedEvent,
   getFestivalEventsForYear,
   toBengaliDate,
+  toBengaliDateDisplay,
   toBengaliNumber,
   findBengaliMonthStart,
   addDays,
@@ -257,7 +258,7 @@ function nearestOccurrence(dates: CalendarDate[]): CalendarDate {
 }
 
 function bengaliDateLabel(date: CalendarDate, system: PanchangSystem): string {
-  const bd = toBengaliDate(date, KOLKATA, system);
+  const bd = toBengaliDateDisplay(date, KOLKATA, system);
   return `${BENGALI_MONTH_NAMES[bd.monthIndex]} ${toBengaliNumber(bd.day)}, ${toBengaliNumber(bd.year)}`;
 }
 

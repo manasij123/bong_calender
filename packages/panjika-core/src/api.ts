@@ -2,8 +2,8 @@
 // conversion, panchang, and festival/holiday data together into what a UI
 // actually needs: month grids annotated with everything relevant per day.
 
-import { CalendarDate, dateKey, getGregorianMonthDates, toBengaliDate } from "./bengaliCalendar.js";
-import { getBengaliMonthDates } from "./bengaliCalendar.js";
+import { CalendarDate, dateKey, getGregorianMonthDates, toBengaliDateDisplay } from "./bengaliCalendar.js";
+import { getBengaliMonthDatesDisplay } from "./bengaliCalendar.js";
 import { computeDayInfo, computeBengaliYearDays, DayInfo } from "./dayInfo.js";
 import {
   getEventIndexForGregorianYear,
@@ -141,7 +141,7 @@ export function getBengaliMonthGrid(
   loc: GeoLocation = KOLKATA,
   system: PanchangSystem = DEFAULT_SYSTEM
 ): DayCell[] {
-  return getBengaliMonthDates(bengaliYear, monthIndex, loc, system).map((date) => ({
+  return getBengaliMonthDatesDisplay(bengaliYear, monthIndex, loc, system).map((date) => ({
     date,
     info: getDayInfoCached(date, loc, system),
     events: getEventsForDate(date, loc, system),
@@ -174,7 +174,7 @@ export function getShuvoKarmoForDates(
   system: PanchangSystem = DEFAULT_SYSTEM
 ): Map<string, ShuvoKarmoResult> {
   const bengaliYears = new Set<number>();
-  for (const d of dates) bengaliYears.add(toBengaliDate(d, loc, system).year);
+  for (const d of dates) bengaliYears.add(toBengaliDateDisplay(d, loc, system).year);
 
   const merged = new Map<string, ShuvoKarmoResult>();
   for (const by of bengaliYears) {

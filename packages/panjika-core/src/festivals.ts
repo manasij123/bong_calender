@@ -316,15 +316,18 @@ export function resolveBengaliFestivals(
     const rule = festival.rule;
     if (rule.kind === "tithiNearAnchor") continue;
     if (rule.kind === "bengaliMonthDay") {
+      // displayBengali, not bengali: this is a purely-solar rule, so it
+      // should use the user-visible month/day convention (see
+      // dayInfo.ts's DayInfo.displayBengali).
       const idx = yearDays.findIndex(
-        (d) => d.bengali.monthIndex === rule.monthIndex && d.bengali.day === rule.day
+        (d) => d.displayBengali.monthIndex === rule.monthIndex && d.displayBengali.day === rule.day
       );
       if (idx >= 0) {
         events.push({ festival, date: yearDays[idx].gregorian });
         resolvedIndexById.set(festival.id, idx);
       }
     } else if (rule.kind === "bengaliMonthLastDay") {
-      const monthDays = yearDays.filter((d) => d.bengali.monthIndex === rule.monthIndex);
+      const monthDays = yearDays.filter((d) => d.displayBengali.monthIndex === rule.monthIndex);
       const last = monthDays[monthDays.length - 1];
       if (last) {
         events.push({ festival, date: last.gregorian });

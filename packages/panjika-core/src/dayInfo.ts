@@ -11,11 +11,15 @@ import {
   CalendarDate,
   getBengaliMonthDates,
   toBengaliDate,
+  toBengaliDateDisplay,
 } from "./bengaliCalendar.js";
 
 export interface DayInfo {
   gregorian: CalendarDate;
+  /** Internal convention -- what the tithi festival resolver's month-window search relies on. */
   bengali: BengaliDate;
+  /** User-visible convention -- display and purely-solar festival rules read this instead. */
+  displayBengali: BengaliDate;
   panchang: PanchangSummary;
   sunTimes: SunTimes;
 }
@@ -30,7 +34,8 @@ export function computeDayInfo(
   const jd = dateToJD(sunTimes.sunriseLocal);
   const panchang = getPanchang(jd, system);
   const bengali = toBengaliDate(date, loc, system);
-  return { gregorian: date, bengali, panchang, sunTimes };
+  const displayBengali = toBengaliDateDisplay(date, loc, system);
+  return { gregorian: date, bengali, displayBengali, panchang, sunTimes };
 }
 
 /** All 12 Bengali months' days for a Bengali year, each with full panchang. */
