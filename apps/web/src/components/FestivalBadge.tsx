@@ -20,27 +20,41 @@ export default function FestivalBadge({ event, mode, size = "lg" }: FestivalBadg
   return (
     <div
       className={`relative w-full overflow-hidden rounded-2xl border-[3px] bg-[color:var(--festival-badge-bg)] flex flex-col items-center justify-center shadow-glow ${
-        isLarge ? "aspect-[4/3] p-4 gap-2" : "aspect-square p-2 gap-1"
+        isLarge ? "aspect-[4/3] p-2 sm:p-4 gap-1 sm:gap-2" : "aspect-square p-2 gap-1"
       }`}
       style={{ borderColor: color }}
     >
       {images ? (
         <div
-          className={`rounded-xl flex items-center justify-center ${isLarge ? "w-full flex-1 p-2" : "h-8 w-8"}`}
+          className={`rounded-xl flex items-center justify-center ${isLarge ? "w-full flex-1 min-h-0 p-2" : "h-8 w-8"}`}
           style={{ backgroundColor: deepenColor(color), ["--festival-art-tint" as string]: "#000000" }}
         >
-          <CyclingImage images={images} alt={name} className={isLarge ? "h-20 w-20 sm:h-24 sm:w-24" : "h-full w-full"} />
+          <CyclingImage
+            images={images}
+            alt={name}
+            className={isLarge ? "h-full w-full max-h-20 max-w-20 sm:max-h-24 sm:max-w-24" : "h-full w-full"}
+          />
         </div>
       ) : (
-        <div style={{ color }} className={isLarge ? "h-16 w-16 sm:h-20 sm:w-20" : "h-8 w-8"}>
-          <FestivalIconGlyph icon={event.festival.icon} className="h-full w-full" />
+        <div
+          style={{ color }}
+          className={
+            isLarge
+              ? "flex-1 min-h-0 w-full flex items-center justify-center"
+              : "h-8 w-8"
+          }
+        >
+          <FestivalIconGlyph
+            icon={event.festival.icon}
+            className={isLarge ? "h-full w-full max-h-16 max-w-16 sm:max-h-20 sm:max-w-20" : "h-full w-full"}
+          />
         </div>
       )}
 
       {isLarge ? (
         <MarqueeText
           text={name}
-          className="w-full shrink-0 bn font-extrabold text-center text-[color:var(--text)] text-base px-1 z-10"
+          className="w-full shrink-0 bn font-extrabold text-center text-[color:var(--text)] text-sm sm:text-base px-1 z-10"
         />
       ) : (
         <span className="sr-only">{name}</span>
