@@ -1,6 +1,7 @@
 import { ResolvedEvent } from "@bong/panjika-core";
 import FestivalIconGlyph from "./festivalIcons";
 import CyclingImage from "./CyclingImage";
+import MarqueeText from "./MarqueeText";
 import { CATEGORY_COLOR, deepenColor } from "../lib/festivalColor";
 import { FESTIVAL_IMAGES } from "../lib/festivalImages";
 
@@ -25,7 +26,7 @@ export default function FestivalBadge({ event, mode, size = "lg" }: FestivalBadg
     >
       {images ? (
         <div
-          className={`rounded-xl flex items-center justify-center ${isLarge ? "w-full flex-1 p-2" : "h-8 w-8"}`}
+          className={`rounded-xl flex items-center justify-center min-h-0 ${isLarge ? "w-full flex-1 p-2" : "h-8 w-8"}`}
           style={{ backgroundColor: deepenColor(color), ["--festival-art-tint" as string]: "#000000" }}
         >
           <CyclingImage images={images} alt={name} className={isLarge ? "h-20 w-20 sm:h-24 sm:w-24" : "h-full w-full"} />
@@ -37,7 +38,10 @@ export default function FestivalBadge({ event, mode, size = "lg" }: FestivalBadg
       )}
 
       {isLarge ? (
-        <p className="bn font-extrabold text-center text-[color:var(--text)] leading-tight text-base px-1 z-10">{name}</p>
+        <MarqueeText
+          text={name}
+          className="w-full shrink-0 bn font-extrabold text-center text-[color:var(--text)] text-base px-1 z-10"
+        />
       ) : (
         <span className="sr-only">{name}</span>
       )}
