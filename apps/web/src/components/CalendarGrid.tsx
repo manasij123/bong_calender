@@ -102,7 +102,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                     ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10"
                     : cellTintColor
                     ? "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"
-                    : "border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"
+                    : "border-[color:var(--border-strong)] hover:bg-[color:var(--bg-soft)]"
                 }
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
