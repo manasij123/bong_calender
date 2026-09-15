@@ -91,7 +91,7 @@ export default function Header({
                 system === "surya-siddhanta" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
               }`}
             >
-              ঐতিহ্যগত
+              ঐতিহ্যগত (সূর্য)
             </button>
             <button
               onClick={() => onSystemChange("drik")}
@@ -100,7 +100,7 @@ export default function Header({
                 system === "drik" ? "bg-[color:var(--accent-3)] text-black" : "text-[color:var(--text-muted)]"
               }`}
             >
-              আধুনিক
+              আধুনিক (দৃক)
             </button>
           </div>
         </div>
