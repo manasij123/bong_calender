@@ -92,7 +92,7 @@ export default function DayDetailPanel({ detail, mode, system }: DayDetailPanelP
         </p>
       )}
 
-      <p className="text-[10px] text-[color:var(--text-muted)] leading-relaxed border-t border-[color:var(--border)] pt-3">
+      <p className="text-[10px] text-[color:var(--text-muted)] leading-relaxed border-t border-[color:var(--border)] pt-3 bn">
         {system === "surya-siddhanta"
           ? "হিসাব ভিত্তি: সূর্যসিদ্ধান্ত (ঐতিহ্যগত মধ্যম গতি + মন্দ সংস্কার), কলকাতার জন্য গণনা করা -- বেশিরভাগ মুদ্রিত পঞ্জিকার কাছাকাছি।"
           : "হিসাব ভিত্তি: দৃকসিদ্ধান্ত -- আধুনিক জ্যোতির্বৈজ্ঞানিক অবস্থান (Meeus) + লাহিড়ী অয়নাংশ, কলকাতার জন্য গণনা করা।"}{" "}
