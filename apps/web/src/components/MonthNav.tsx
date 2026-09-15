@@ -21,7 +21,7 @@ export default function MonthNav({ title, subtitle, onPrev, onNext, onToday }: M
         <h2 className="text-xl sm:text-2xl font-extrabold bn-heading leading-tight truncate bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent-2)] bg-clip-text text-transparent">
           {title}
         </h2>
-        <p className="text-[11px] tracking-[0.2em] text-[color:var(--text-muted)] font-semibold">{subtitle}</p>
+        <p className="text-[11px] tracking-[0.2em] text-[color:var(--text-muted)] font-semibold bn">{subtitle}</p>
       </div>
 
       <div className="flex items-center gap-1.5 shrink-0">
