@@ -97,7 +97,13 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
               onClick={() => onSelect(cell)}
               style={cellTintColor ? { backgroundColor: hexToRgbaVar(cellTintColor, "--badge-tint-alpha", 0.16) } : undefined}
               className={`group relative aspect-[4/6.6] sm:aspect-[4/4.6] rounded-xl sm:rounded-2xl border overflow-hidden transition-all flex flex-col
-                ${isSelected ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10" : "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"}
+                ${
+                  isSelected
+                    ? "border-[color:var(--accent)] bg-[color:var(--accent)]/10"
+                    : cellTintColor
+                    ? "border-transparent hover:border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"
+                    : "border-[color:var(--border)] hover:bg-[color:var(--bg-soft)]"
+                }
                 ${isToday ? "ring-2 ring-[color:var(--today-ring)] ring-offset-1 ring-offset-[color:var(--bg-elevated)]" : ""}
               `}
             >
@@ -137,16 +143,14 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   />
                 </div>
               ) : (
-                <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1.5">
-                  <div className="h-full w-full rounded-lg sm:rounded-xl border border-[color:var(--border)] flex items-center justify-center">
-                    <span
-                      className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
-                        isSunday ? "text-[color:var(--today-ring)]" : ""
-                      }`}
-                    >
-                      <AnimatedValue value={primary} />
-                    </span>
-                  </div>
+                <div className="flex-1 min-h-0 w-full flex items-center justify-center">
+                  <span
+                    className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
+                      isSunday ? "text-[color:var(--today-ring)]" : ""
+                    }`}
+                  >
+                    <AnimatedValue value={primary} />
+                  </span>
                 </div>
               )}
             </button>
