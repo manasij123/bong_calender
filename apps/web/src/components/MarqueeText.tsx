@@ -38,10 +38,23 @@ export default function MarqueeText({ text, className, color }: MarqueeTextProps
     style["--marquee-shift"] = `-${shift}px`;
   }
 
+  // While actually scrolling, any mid-transition frame otherwise hard-clips
+  // the text at the box edge (looks like broken/cut text, e.g. a screenshot
+  // catching "at Chandra Chattopa" instead of the full name) -- fading the
+  // edges makes it read as text scrolling past a window instead.
+  const containerStyle: CSSProperties | undefined =
+    shift > 0
+      ? {
+          WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+          maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+        }
+      : undefined;
+
   return (
     <div
       ref={containerRef}
       className={`flex overflow-hidden whitespace-nowrap ${shift > 0 ? "justify-start" : "justify-center"} ${className ?? ""}`}
+      style={containerStyle}
     >
       <span
         ref={textRef}
