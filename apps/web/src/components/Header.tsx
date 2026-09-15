@@ -1,4 +1,7 @@
 import { PanchangSystem } from "@bong/panjika-core";
+import { Search, Sun, Moon } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRing } from "@fortawesome/free-solid-svg-icons";
 
 interface HeaderProps {
   mode: "bn" | "en";
@@ -59,21 +62,21 @@ export default function Header({
             title="শুভ কাজের দিন (বিবাহ/অন্নপ্রাশন/গৃহপ্রবেশ)"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            💍
+            <FontAwesomeIcon icon={faRing} style={{ width: "1.1rem", height: "1.1rem" }} />
           </button>
           <button
             onClick={onOpenSearch}
             aria-label="Search"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            🔍
+            <Search style={{ width: "1.1rem", height: "1.1rem" }} />
           </button>
           <button
             onClick={onThemeToggle}
             aria-label="Toggle theme"
             className="h-11 w-11 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] text-base"
           >
-            {theme === "dark" ? "☀️" : "🌙"}
+            {theme === "dark" ? <Sun style={{ width: "1.1rem", height: "1.1rem" }} /> : <Moon style={{ width: "1.1rem", height: "1.1rem" }} />}
           </button>
         </div>
       </div>

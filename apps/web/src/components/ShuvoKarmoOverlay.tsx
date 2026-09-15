@@ -1,4 +1,7 @@
 import { useMemo } from "react";
+import { Home, X } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRing, faBowlRice } from "@fortawesome/free-solid-svg-icons";
 import {
   DayCell,
   ShuvoKarmoResult,
@@ -20,10 +23,10 @@ interface ShuvoKarmoOverlayProps {
   system: PanchangSystem;
 }
 
-const SECTIONS: { key: keyof ShuvoKarmoResult; titleBn: string; titleEn: string; emoji: string }[] = [
-  { key: "bibaha", titleBn: "বিবাহ", titleEn: "Marriage", emoji: "💍" },
-  { key: "annaprashan", titleBn: "অন্নপ্রাশন", titleEn: "Annaprashan", emoji: "🍚" },
-  { key: "grihaPravesh", titleBn: "গৃহপ্রবেশ", titleEn: "Griha Pravesh", emoji: "🏠" },
+const SECTIONS: { key: keyof ShuvoKarmoResult; titleBn: string; titleEn: string; icon: JSX.Element }[] = [
+  { key: "bibaha", titleBn: "বিবাহ", titleEn: "Marriage", icon: <FontAwesomeIcon icon={faRing} style={{ width: "1rem", height: "1rem" }} /> },
+  { key: "annaprashan", titleBn: "অন্নপ্রাশন", titleEn: "Annaprashan", icon: <FontAwesomeIcon icon={faBowlRice} style={{ width: "1rem", height: "1rem" }} /> },
+  { key: "grihaPravesh", titleBn: "গৃহপ্রবেশ", titleEn: "Griha Pravesh", icon: <Home style={{ width: "1rem", height: "1rem" }} /> },
 ];
 
 function dateLabel(cell: DayCell, mode: "bn" | "en"): string {
@@ -54,9 +57,9 @@ export default function ShuvoKarmoOverlay({ open, onClose, mode, cells, loc, sys
           <button
             onClick={onClose}
             aria-label="Close"
-            className="shrink-0 text-[color:var(--text-muted)] text-xl leading-none px-1"
+            className="shrink-0 text-[color:var(--text-muted)] px-1"
           >
-            ×
+            <X style={{ width: "1.1rem", height: "1.1rem" }} />
           </button>
         </div>
 
@@ -66,7 +69,7 @@ export default function ShuvoKarmoOverlay({ open, onClose, mode, cells, loc, sys
             return (
               <div key={section.key} className="border-b border-[color:var(--border)] last:border-0">
                 <div className="px-4 py-2 bg-[color:var(--bg-soft)] flex items-center gap-2">
-                  <span aria-hidden>{section.emoji}</span>
+                  <span aria-hidden>{section.icon}</span>
                   <span className="text-xs font-semibold bn">{mode === "bn" ? section.titleBn : section.titleEn}</span>
                 </div>
                 {matches.length === 0 ? (

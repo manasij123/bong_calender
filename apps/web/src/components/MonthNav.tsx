@@ -1,3 +1,5 @@
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 interface MonthNavProps {
   title: string;
   subtitle: string;
@@ -14,7 +16,7 @@ export default function MonthNav({ title, subtitle, onPrev, onNext, onToday }: M
         aria-label="Previous month"
         className="h-10 w-10 shrink-0 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] hover:bg-[color:var(--bg-soft)] transition-colors text-lg"
       >
-        ‹
+        <ChevronLeft style={{ width: "1.2rem", height: "1.2rem" }} />
       </button>
 
       <div className="text-center min-w-0 flex-1">
@@ -36,7 +38,7 @@ export default function MonthNav({ title, subtitle, onPrev, onNext, onToday }: M
           aria-label="Next month"
           className="h-10 w-10 grid place-items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] hover:bg-[color:var(--bg-soft)] transition-colors text-lg"
         >
-          ›
+          <ChevronRight style={{ width: "1.2rem", height: "1.2rem" }} />
         </button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useEffect, ReactNode } from "react";
+import { ArrowLeft } from "lucide-react";
 
 interface MobileSlideDrawerProps {
   open: boolean;
@@ -42,7 +43,7 @@ export default function MobileSlideDrawer({ open, onClose, closeLabel, children 
             onClick={onClose}
             className="self-start flex items-center gap-1.5 rounded-full border border-[color:var(--border)] bg-[color:var(--bg-elevated)] px-4 py-3 text-sm font-semibold"
           >
-            <span aria-hidden>←</span>
+            <ArrowLeft aria-hidden style={{ width: "1.1rem", height: "1.1rem" }} />
             <span className="bn">{closeLabel}</span>
           </button>
           {children}

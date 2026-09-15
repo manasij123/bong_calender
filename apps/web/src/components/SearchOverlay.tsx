@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import { CalendarDate, PanchangSystem } from "@bong/panjika-core";
 import { buildFestivalSearchIndex, searchFestivals } from "../lib/search";
 
@@ -45,9 +46,7 @@ export default function SearchOverlay({ open, onClose, mode, system, onSelectDat
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
       <div className="relative w-full max-w-md rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-elevated)] shadow-2xl overflow-hidden">
         <div className="flex items-center gap-2 border-b border-[color:var(--border)] px-3 py-2.5">
-          <span aria-hidden className="text-lg shrink-0">
-            🔍
-          </span>
+          <Search aria-hidden className="shrink-0 text-[color:var(--text-muted)]" style={{ width: "1.1rem", height: "1.1rem" }} />
           <input
             ref={inputRef}
             value={query}
@@ -58,9 +57,9 @@ export default function SearchOverlay({ open, onClose, mode, system, onSelectDat
           <button
             onClick={onClose}
             aria-label="Close search"
-            className="shrink-0 text-[color:var(--text-muted)] text-xl leading-none px-1"
+            className="shrink-0 text-[color:var(--text-muted)] px-1"
           >
-            ×
+            <X style={{ width: "1.1rem", height: "1.1rem" }} />
           </button>
         </div>
 
