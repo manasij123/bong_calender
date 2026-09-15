@@ -110,7 +110,7 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
               <div className="flex justify-end px-1 pt-1 shrink-0">
                 <span
                   className={`rounded-md bg-[color:var(--bg-elevated)]/70 px-1 py-0.5 text-[9px] sm:text-[11px] font-semibold leading-none ${
-                    mode === "bn" ? "num-en" : "bn"
+                    mode === "bn" ? "num-en" : "bn-heading"
                   } ${isSunday ? "text-[color:var(--today-ring)]" : "text-[color:var(--text-muted)]"}`}
                 >
                   <AnimatedValue value={secondary} />
