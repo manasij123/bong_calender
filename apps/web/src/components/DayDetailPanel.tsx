@@ -108,7 +108,7 @@ function KalamRow({ label, range }: { label: string; range: string }) {
   return (
     <div className="flex items-center justify-between rounded-lg bg-[color:var(--bg-soft)] px-3 py-1.5">
       <span className="text-xs font-medium bn">{label}</span>
-      <span className="text-xs text-[color:var(--text-muted)] num-en">{range}</span>
+      <span className="text-xs text-[color:var(--text-muted)] bn num-en">{range}</span>
     </div>
   );
 }
