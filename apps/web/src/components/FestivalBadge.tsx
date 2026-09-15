@@ -26,7 +26,7 @@ export default function FestivalBadge({ event, mode, size = "lg" }: FestivalBadg
     >
       {images ? (
         <div
-          className={`rounded-xl flex items-center justify-center min-h-0 ${isLarge ? "w-full flex-1 p-2" : "h-8 w-8"}`}
+          className={`rounded-xl flex items-center justify-center ${isLarge ? "w-full flex-1 p-2" : "h-8 w-8"}`}
           style={{ backgroundColor: deepenColor(color), ["--festival-art-tint" as string]: "#000000" }}
         >
           <CyclingImage images={images} alt={name} className={isLarge ? "h-20 w-20 sm:h-24 sm:w-24" : "h-full w-full"} />
