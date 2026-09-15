@@ -31,7 +31,7 @@ export default function DayDetailPanel({ detail, mode, system }: DayDetailPanelP
         <p className="text-xs font-semibold tracking-wide text-[color:var(--accent)] bn">{bengali.weekdayName}</p>
         {mode === "bn" ? (
           <>
-            <h3 className="text-2xl font-extrabold bn leading-tight">
+            <h3 className="text-2xl font-extrabold bn-heading leading-tight">
               <AnimatedValue value={bengaliDateLine} />
             </h3>
             <p className="text-sm text-[color:var(--text-muted)]">{gregorianDateLine}</p>

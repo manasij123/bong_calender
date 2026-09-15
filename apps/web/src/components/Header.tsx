@@ -27,7 +27,7 @@ export default function Header({
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <img src={`${import.meta.env.BASE_URL}logo-192.png`} alt="বাংলা পঞ্জিকা" className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-xl shadow-glow" />
           <div className="min-w-0">
-            <h1 className="text-sm sm:text-lg font-bold bn leading-tight truncate">বাংলা পঞ্জিকা</h1>
+            <h1 className="text-sm sm:text-lg font-bold bn-heading leading-tight truncate">বাংলা পঞ্জিকা</h1>
             <p className="hidden sm:block text-[11px] text-[color:var(--text-muted)] leading-tight truncate">
               Bengali Panjika · কলকাতা
             </p>

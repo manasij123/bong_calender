@@ -78,6 +78,16 @@ body {
   font-family: "Hind Siliguri", "Tiro Bangla", sans-serif;
 }
 
+/* Warmer, more distinctive display face for large Bengali headings
+   (app title, month header, day-detail date) -- small/dense UI text
+   (numbers, labels, marquees) stays on Hind Siliguri, which reads best
+   at small sizes. */
+.bn-heading {
+  font-family: "Noto Serif Bengali", "Hind Siliguri", "Tiro Bangla", serif;
+  font-optical-sizing: auto;
+  font-variation-settings: "wdth" 100;
+}
+
 .num-en {
   font-variant-numeric: tabular-nums;
 }
