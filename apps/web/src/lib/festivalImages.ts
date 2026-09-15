@@ -5,7 +5,7 @@
 // for anything not listed here. Multiple images for one key are shown as
 // a slow auto-cycling crossfade (see CyclingImage.tsx).
 
-const BASE = "/festival-icons";
+const BASE = `${import.meta.env.BASE_URL}festival-icons`;
 
 export const FESTIVAL_IMAGES: Record<string, string[]> = {
   "poila-boishakh": [`${BASE}/poila-boishakh-1.png`, `${BASE}/poila-boishakh-2.png`],
