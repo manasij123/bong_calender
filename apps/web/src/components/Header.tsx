@@ -80,10 +80,10 @@ export default function Header({
 
       <div className="border-t border-[color:var(--border)] bg-[color:var(--bg-soft)]/40">
         <div className="mx-auto max-w-6xl px-2 sm:px-5 py-1.5 flex items-center justify-center gap-2">
-          <span className="hidden sm:inline text-[11px] text-[color:var(--text-muted)] bn shrink-0">
+          <span className="hidden sm:inline text-[13px] text-[color:var(--text-muted)] bn shrink-0">
             পঞ্জিকা রীতি
           </span>
-          <div className="flex rounded-full border border-[color:var(--border)] p-0.5 text-[11px] font-semibold">
+          <div className="flex rounded-full border border-[color:var(--border)] p-0.5 text-[13px] font-semibold">
             <button
               onClick={() => onSystemChange("surya-siddhanta")}
               title="সূর্যসিদ্ধান্ত (ঐতিহ্যগত পঞ্জিকা)"
