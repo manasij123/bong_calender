@@ -137,14 +137,16 @@ export default function CalendarGrid({ mode, cells, selectedKey, todayKey, onSel
                   />
                 </div>
               ) : (
-                <div className="flex-1 min-h-0 w-full flex items-center justify-center">
-                  <span
-                    className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
-                      isSunday ? "text-[color:var(--today-ring)]" : ""
-                    }`}
-                  >
-                    <AnimatedValue value={primary} />
-                  </span>
+                <div className="flex-1 min-h-0 w-full flex items-center justify-center p-1.5">
+                  <div className="h-full w-full rounded-lg sm:rounded-xl border border-[color:var(--border)] flex items-center justify-center">
+                    <span
+                      className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
+                        isSunday ? "text-[color:var(--today-ring)]" : ""
+                      }`}
+                    >
+                      <AnimatedValue value={primary} />
+                    </span>
+                  </div>
                 </div>
               )}
             </button>

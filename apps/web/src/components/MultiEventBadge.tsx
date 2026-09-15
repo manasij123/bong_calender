@@ -39,14 +39,16 @@ export default function MultiEventBadge({
 
   if (index >= events.length) {
     return (
-      <div className="flex-1 min-h-0 w-full flex items-center justify-center animate-fade-in">
-        <span
-          className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
-            isSunday ? "text-[color:var(--today-ring)]" : ""
-          }`}
-        >
-          <AnimatedValue value={primaryDateLabel} />
-        </span>
+      <div className="flex-1 min-h-0 w-full flex items-center justify-center animate-fade-in p-1.5">
+        <div className="h-full w-full rounded-lg sm:rounded-xl border border-[color:var(--border)] flex items-center justify-center">
+          <span
+            className={`text-2xl sm:text-3xl font-bold leading-none ${mode === "bn" ? "bn" : "num-en"} ${
+              isSunday ? "text-[color:var(--today-ring)]" : ""
+            }`}
+          >
+            <AnimatedValue value={primaryDateLabel} />
+          </span>
+        </div>
       </div>
     );
   }
